@@ -1,8 +1,8 @@
-package mistNode.wish.request;
+package wishApp.request;
 
 
-import mistNode.wish.Connection;
-import mistNode.RequestInterface;
+import wishApp.Connection;
+import node.RequestInterface;
 
 /**
  * Created by jeppe on 11/30/16.

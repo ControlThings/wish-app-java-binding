@@ -1,4 +1,4 @@
-package mistNode.wish.request;
+package wishApp.request;
 
 import android.util.Log;
 
@@ -10,11 +10,11 @@ import org.bson.BsonWriter;
 import org.bson.RawBsonDocument;
 import org.bson.io.BasicOutputBuffer;
 
-import mistNode.wish.Cert;
-import mistNode.wish.Errors;
-import mistNode.RequestInterface;
+import wishApp.Cert;
+import wishApp.Errors;
+import node.RequestInterface;
 
-import static mistNode.RequestInterface.bsonException;
+import static node.RequestInterface.bsonException;
 
 /**
  * Created by jeppe on 11/28/16.

@@ -1,11 +1,11 @@
-package mistNode.wish.request;
+package wishApp.request;
 
 import org.bson.BsonDocument;
 
 
 import java.util.ArrayList;
 
-import mistNode.wish.LocalDiscovery;
+import wishApp.LocalDiscovery;
 
 /**
  * Created by jeppe on 11/30/16.

@@ -1,4 +1,4 @@
-package mistNode.wish.request;
+package wishApp.request;
 
 import android.util.Log;
 
@@ -13,12 +13,12 @@ import org.bson.io.BasicOutputBuffer;
 
 import java.util.ArrayList;
 
-import mistNode.wish.Connection;
-import mistNode.wish.Errors;
-import mistNode.wish.MistIdentity;
-import mistNode.RequestInterface;
+import wishApp.Connection;
+import wishApp.Errors;
+import wishApp.MistIdentity;
+import node.RequestInterface;
 
-import static mistNode.RequestInterface.bsonException;
+import static node.RequestInterface.bsonException;
 
 class IdentityList {
     static void request(Connection connection, Identity.ListCb callback) {

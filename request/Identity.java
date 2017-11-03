@@ -1,14 +1,14 @@
-package mistNode.wish.request;
+package wishApp.request;
 
 import org.bson.BsonDocument;
 
 import java.util.ArrayList;
 
-import mistNode.wish.Cert;
-import mistNode.wish.Connection;
-import mistNode.node.Peer;
-import mistNode.wish.Friend;
-import mistNode.wish.MistIdentity;
+import wishApp.Cert;
+import wishApp.Connection;
+import mistNode.Peer;
+import wishApp.Friend;
+import wishApp.MistIdentity;
 
 /**
  * Created by jeppe on 11/30/16.

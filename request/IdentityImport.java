@@ -1,4 +1,4 @@
-package mistNode.wish.request;
+package wishApp.request;
 
 import android.util.Log;
 
@@ -10,10 +10,10 @@ import org.bson.BsonWriter;
 import org.bson.RawBsonDocument;
 import org.bson.io.BasicOutputBuffer;
 
-import mistNode.wish.Errors;
-import mistNode.RequestInterface;
+import wishApp.Errors;
+import node.RequestInterface;
 
-import static mistNode.RequestInterface.bsonException;
+import static node.RequestInterface.bsonException;
 
 class IdentityImport {
     static void request(byte[] identity, byte[] localUid, Identity.ImportCb callback) {

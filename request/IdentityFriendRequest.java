@@ -1,4 +1,4 @@
-package mistNode.wish.request;
+package wishApp.request;
 
 import android.util.Log;
 
@@ -14,10 +14,10 @@ import org.bson.io.BasicOutputBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import mistNode.wish.Cert;
-import mistNode.node.Peer;
-import mistNode.wish.Errors;
-import mistNode.RequestInterface;
+import wishApp.Cert;
+import mistNode.Peer;
+import wishApp.Errors;
+import node.RequestInterface;
 
 /**
  * Created by jeppe on 9/28/16.
@@ -129,8 +129,8 @@ class IdentityFriendRequest {
                     private byte[] cert;
 
                     @Override
-                    public void cb(ArrayList<mistNode.wish.Connection> connections) {
-                        for (mistNode.wish.Connection connection : connections) {
+                    public void cb(ArrayList<wishApp.Connection> connections) {
+                        for (wishApp.Connection connection : connections) {
                             if (Arrays.equals(connection.getLuid(), peer.getLocalId()) && Arrays.equals(connection.getRhid(), peer.getRemoteHostId()) && Arrays.equals(connection.getRuid(), peer.getRemoteId())) {
 
                                 Identity.sign(connection, peer.getRemoteId(), new RawBsonDocument(cert), new Identity.SignCb() {

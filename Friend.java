@@ -1,4 +1,4 @@
-package mistNode.wish;
+package wishApp;
 
 import org.bson.BsonDocument;
 

@@ -1,4 +1,4 @@
-package mistNode.wish.request;
+package wishApp.request;
 
 import android.util.Log;
 
@@ -13,12 +13,12 @@ import org.bson.io.BasicOutputBuffer;
 
 import java.util.ArrayList;
 
-import mistNode.wish.Connection;
-import mistNode.wish.Errors;
-import mistNode.wish.Friend;
-import mistNode.RequestInterface;
+import wishApp.Connection;
+import wishApp.Errors;
+import wishApp.Friend;
+import node.RequestInterface;
 
-import static mistNode.RequestInterface.bsonException;
+import static node.RequestInterface.bsonException;
 
 class IdentityFriendRequestList {
     static void request(Connection connection, Identity.FriendRequestListCb callback) {

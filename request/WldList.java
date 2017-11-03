@@ -1,4 +1,4 @@
-package mistNode.wish.request;
+package wishApp.request;
 
 import android.util.Log;
 
@@ -13,11 +13,11 @@ import org.bson.io.BasicOutputBuffer;
 
 import java.util.ArrayList;
 
-import mistNode.wish.LocalDiscovery;
-import mistNode.wish.Errors;
-import mistNode.RequestInterface;
+import wishApp.LocalDiscovery;
+import wishApp.Errors;
+import node.RequestInterface;
 
-import static mistNode.RequestInterface.bsonException;
+import static node.RequestInterface.bsonException;
 
 /**
  * Created by jeppe on 9/28/16.

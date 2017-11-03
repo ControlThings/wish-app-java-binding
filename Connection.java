@@ -1,4 +1,4 @@
-package mistNode.wish;
+package wishApp;
 
 /**
  * Created by jeppe on 12/28/16.

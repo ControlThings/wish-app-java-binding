@@ -1,4 +1,4 @@
-package mistNode.wish.request;
+package wishApp.request;
 
 import android.util.Log;
 
@@ -13,8 +13,8 @@ import org.bson.io.BasicOutputBuffer;
 
 import java.util.ArrayList;
 
-import mistNode.wish.Errors;
-import mistNode.RequestInterface;
+import wishApp.Errors;
+import node.RequestInterface;
 
 
 /**
@@ -49,10 +49,10 @@ class ConnectionList {
             private void response(byte[] dataBson) {
                 try {
                     BsonDocument bson = new RawBsonDocument(dataBson);
-                    ArrayList<mistNode.wish.Connection> connections = new ArrayList<mistNode.wish.Connection>();
+                    ArrayList<wishApp.Connection> connections = new ArrayList<wishApp.Connection>();
                     BsonArray bsonArray = bson.get("data").asArray();
                     for (BsonValue bsonValue : bsonArray) {
-                        mistNode.wish.Connection connection = new mistNode.wish.Connection();
+                        wishApp.Connection connection = new wishApp.Connection();
                         connection.setCid(bsonValue.asDocument().get("cid").asInt32().getValue());
                         connection.setLuid(bsonValue.asDocument().get("luid").asBinary().getData());
                         connection.setRuid(bsonValue.asDocument().get("ruid").asBinary().getData());

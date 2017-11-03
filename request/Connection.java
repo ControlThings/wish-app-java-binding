@@ -1,4 +1,4 @@
-package mistNode.wish.request;
+package wishApp.request;
 
 import java.util.ArrayList;
 
@@ -23,6 +23,6 @@ public class Connection {
 
 
     public interface ListCb extends Callback {
-        public void cb(ArrayList<mistNode.wish.Connection> connections);
+        public void cb(ArrayList<wishApp.Connection> connections);
     }
 }
