@@ -1,10 +1,10 @@
-package mistNode.wish;
+package mistNode;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import mistNode.RequestInterface;
+import node.RequestInterface;
 
 
 /**
