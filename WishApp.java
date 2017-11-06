@@ -52,6 +52,12 @@ public class WishApp {
 
     public synchronized native int requestCancel(int id);
 
+    /** This method simply pretty-prints a BSON object to the system console
+     * @param tag the console log tag
+     * @param bson_bytes the BSON object to be pretty printed
+     */
+    public static native void bsonConsolePrettyPrinter(String tag, byte[] bson_bytes);
+
 
     void online(byte[] peerBson) {
 
