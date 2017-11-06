@@ -12,9 +12,9 @@ import org.bson.io.BasicOutputBuffer;
 
 import wishApp.Cert;
 import wishApp.Errors;
-import node.RequestInterface;
+import wishApp.RequestInterface;
 
-import static node.RequestInterface.bsonException;
+import static wishApp.RequestInterface.bsonException;
 
 /**
  * Created by jeppe on 11/28/16.

@@ -16,9 +16,9 @@ import java.util.ArrayList;
 import wishApp.Connection;
 import wishApp.Errors;
 import wishApp.MistIdentity;
-import node.RequestInterface;
+import wishApp.RequestInterface;
 
-import static node.RequestInterface.bsonException;
+import static wishApp.RequestInterface.bsonException;
 
 class IdentityList {
     static void request(Connection connection, Identity.ListCb callback) {

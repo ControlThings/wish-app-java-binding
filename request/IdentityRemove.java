@@ -12,9 +12,9 @@ import org.bson.io.BasicOutputBuffer;
 
 import wishApp.Connection;
 import wishApp.Errors;
-import node.RequestInterface;
+import wishApp.RequestInterface;
 
-import static node.RequestInterface.bsonException;
+import static wishApp.RequestInterface.bsonException;
 
 class IdentityRemove {
     static void request(Connection connection, byte[] uid, Identity.RemoveCb callback) {

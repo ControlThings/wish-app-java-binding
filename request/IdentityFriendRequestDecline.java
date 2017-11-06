@@ -12,10 +12,10 @@ import org.bson.io.BasicOutputBuffer;
 
 import wishApp.Connection;
 import wishApp.Errors;
-import node.RequestInterface;
+import wishApp.RequestInterface;
 
-import static node.RequestInterface.bsonError;
-import static node.RequestInterface.bsonException;
+import static wishApp.RequestInterface.bsonError;
+import static wishApp.RequestInterface.bsonException;
 
 class IdentityFriendRequestDecline {
     static void request(Connection connection, byte[] luid, byte[] ruid, Identity.FriendRequestDeclineCb callback) {

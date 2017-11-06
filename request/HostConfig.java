@@ -10,7 +10,7 @@ import org.bson.RawBsonDocument;
 import org.bson.io.BasicOutputBuffer;
 
 import wishApp.Errors;
-import node.RequestInterface;
+import wishApp.RequestInterface;
 
 
 /**

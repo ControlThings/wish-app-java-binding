@@ -10,8 +10,7 @@ import org.bson.RawBsonDocument;
 import org.bson.io.BasicOutputBuffer;
 
 import wishApp.Errors;
-import node.RequestInterface;
-
+import wishApp.RequestInterface;
 
 
 /**
@@ -61,6 +60,8 @@ class ConnectionDisconnect {
                 Log.d(op, "RPC error: " + msg + " code: " + code);
                 callback.err(code, msg);
             }
+
+
 
             private RequestInterface.Callback init(Connection.DisconectCb callback) {
                 this.callback = callback;

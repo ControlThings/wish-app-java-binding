@@ -14,7 +14,7 @@ import org.bson.io.BasicOutputBuffer;
 import java.util.ArrayList;
 
 import wishApp.Errors;
-import node.RequestInterface;
+import wishApp.RequestInterface;
 
 
 /**

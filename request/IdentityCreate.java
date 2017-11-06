@@ -12,7 +12,7 @@ import org.bson.io.BasicOutputBuffer;
 
 import wishApp.MistIdentity;
 import wishApp.Errors;
-import node.RequestInterface;
+import wishApp.RequestInterface;
 
 /**
  * Created by jeppe on 8/23/16.

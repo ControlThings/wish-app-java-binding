@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import wishApp.Cert;
 import wishApp.Connection;
-import mistNode.Peer;
+import wishApp.Peer;
 import wishApp.Friend;
 import wishApp.MistIdentity;
 

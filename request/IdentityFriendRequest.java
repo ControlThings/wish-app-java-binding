@@ -15,9 +15,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import wishApp.Cert;
-import mistNode.Peer;
+import wishApp.Peer;
 import wishApp.Errors;
-import node.RequestInterface;
+import wishApp.RequestInterface;
 
 /**
  * Created by jeppe on 9/28/16.

@@ -11,9 +11,9 @@ import org.bson.RawBsonDocument;
 import org.bson.io.BasicOutputBuffer;
 
 import wishApp.Errors;
-import node.RequestInterface;
+import wishApp.RequestInterface;
 
-import static node.RequestInterface.bsonException;
+import static wishApp.RequestInterface.bsonException;
 
 class IdentityImport {
     static void request(byte[] identity, byte[] localUid, Identity.ImportCb callback) {

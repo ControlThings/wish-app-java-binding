@@ -12,9 +12,9 @@ import org.bson.io.BasicOutputBuffer;
 
 import wishApp.MistIdentity;
 import wishApp.Errors;
-import node.RequestInterface;
+import wishApp.RequestInterface;
 
-import static node.RequestInterface.bsonException;
+import static wishApp.RequestInterface.bsonException;
 
 class IdentityGet {
     static void request(byte[] id, Identity.GetCb callback) {

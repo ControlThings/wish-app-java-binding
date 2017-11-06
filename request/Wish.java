@@ -2,7 +2,7 @@ package wishApp.request;
 
 
 import wishApp.Connection;
-import node.RequestInterface;
+import wishApp.RequestInterface;
 
 /**
  * Created by jeppe on 11/30/16.
