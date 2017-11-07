@@ -1,7 +1,16 @@
 package wishApp;
 
+import org.bson.BSONException;
+import org.bson.BsonBinary;
+import org.bson.BsonBinaryWriter;
+import org.bson.BsonDocument;
+import org.bson.BsonWriter;
+import org.bson.RawBsonDocument;
+import org.bson.io.BasicOutputBuffer;
+
 import java.io.Serializable;
 import java.util.Arrays;
+
 
 /**
  * Created by jeppe on 11/16/16.
@@ -9,59 +18,103 @@ import java.util.Arrays;
 
 public class Peer implements Serializable {
 
-    private byte[] localId;
-    private byte[] remoteId;
-    private byte[] remoteHostId;
-    private byte[] remoteServiceId;
+    private byte[] luid;
+    private byte[] ruid;
+    private byte[] rhid;
+    private byte[] rsid;
     private String protocol;
     private boolean online;
 
-    public byte[] getLocalId() {
-        return localId;
+    private static int WISH_UID_LEN = 32;
+
+
+    public static Peer fromBson(byte[] data) {
+        try {
+            return fromBson(new RawBsonDocument(data));
+        } catch (BSONException e) {
+            return null;
+        }
     }
 
-    public void setLocalId(byte[] localId) {
-        this.localId = localId;
+    public static Peer fromBson(BsonDocument bsonDocument) {
+
+        Peer peer = new Peer();
+        try {
+            if (bsonDocument.containsKey("luid")
+                && bsonDocument.containsKey("ruid")
+                && bsonDocument.containsKey("rhid")
+                && bsonDocument.containsKey("protocol")
+                && bsonDocument.containsKey("online")) {
+
+                peer.luid = bsonDocument.get("luid").asBinary().getData();
+                peer.ruid = bsonDocument.get("ruid").asBinary().getData();
+                peer.rhid = bsonDocument.get("rhid").asBinary().getData();
+                peer.rsid = bsonDocument.get("rsid").asBinary().getData();
+                peer.protocol = bsonDocument.get("protocol").asString().getValue();
+                peer.online = bsonDocument.get("online").asBoolean().getValue();
+
+                if (peer.luid.length != WISH_UID_LEN) {
+                    return null;
+                }
+                if (peer.ruid.length != WISH_UID_LEN) {
+                    return null;
+                }
+                if (peer.rhid.length != WISH_UID_LEN) {
+                    return null;
+                }
+                if (peer.rsid.length != WISH_UID_LEN) {
+                    return null;
+                }
+            } else {
+                return null;
+            }
+
+        } catch (BSONException e) {
+            return null;
+        }
+
+        return peer;
     }
 
-    public byte[] getRemoteId() {
-        return remoteId;
+    public byte[] toBson() {
+        BasicOutputBuffer buffer = new BasicOutputBuffer();
+        BsonWriter writer = new BsonBinaryWriter(buffer);
+
+        writer.writeStartDocument();
+        writer.writeBinaryData("luid", new BsonBinary(getLuid()));
+        writer.writeBinaryData("ruid", new BsonBinary(getRuid()));
+        writer.writeBinaryData("rhid", new BsonBinary(getRhid()));
+        writer.writeBinaryData("rsid", new BsonBinary(getRsid()));
+        writer.writeString("protocol", getProtocol());
+        writer.writeBoolean("online", isOnline());
+        writer.writeEndDocument();
+        writer.flush();
+
+        return buffer.toByteArray();
     }
 
-    public void setRemoteId(byte[] remoteId) {
-        this.remoteId = remoteId;
+    public byte[] getLuid() {
+        return luid;
     }
 
-    public byte[] getRemoteHostId() {
-        return remoteHostId;
+    public byte[] getRuid() {
+        return ruid;
     }
 
-    public void setRemoteHostId(byte[] remoteHostId) {
-        this.remoteHostId = remoteHostId;
+    public byte[] getRhid() {
+        return rhid;
     }
 
-    public byte[] getRemoteServiceId() {
-        return remoteServiceId;
-    }
-
-    public void setRemoteServiceId(byte[] remoteServiceId) {
-        this.remoteServiceId = remoteServiceId;
+    public byte[] getRsid() {
+        return rsid;
     }
 
     public String getProtocol() {
         return protocol;
     }
 
-    public void setProtocol(String protocol) {
-        this.protocol = protocol;
-    }
-
     public boolean isOnline() {
         return online;
-    }
-
-    public void setOnline(boolean online) {
-        this.online = online;
     }
 
     private String byteArrayAsString(byte[] array) {
@@ -78,10 +131,10 @@ public class Peer implements Serializable {
 
     public String toString() {
         String s = new String();
-        s = "luid: " + byteArrayAsString(localId);
-        s += " ruid: " + byteArrayAsString(remoteId);
-        s += " rhid: " + byteArrayAsString(remoteHostId);
-        s += " rsid: " + byteArrayAsString(remoteServiceId);
+        s = "luid: " + byteArrayAsString(luid);
+        s += " ruid: " + byteArrayAsString(ruid);
+        s += " rhid: " + byteArrayAsString(rhid);
+        s += " rsid: " + byteArrayAsString(rsid);
         s += " protocol: " + protocol;
         s += online ? " online" : " offline";
         return s;
@@ -102,10 +155,10 @@ public class Peer implements Serializable {
 
         Peer peer = (Peer) object;
 
-        return Arrays.equals(localId, peer.getLocalId())
-                && Arrays.equals(remoteHostId, peer.getRemoteId())
-                && Arrays.equals(remoteHostId, peer.getRemoteHostId())
-                && Arrays.equals(remoteServiceId, peer.getRemoteHostId())
+        return Arrays.equals(luid, peer.getLuid())
+                && Arrays.equals(rhid, peer.getRuid())
+                && Arrays.equals(rhid, peer.getRhid())
+                && Arrays.equals(rsid, peer.getRhid())
                 && protocol.equals(peer.getProtocol());
     }
 }

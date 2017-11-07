@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import mistNode.RequestInterface;
+//import mistNode.RequestInterface;
 
 
 /**
@@ -30,13 +30,13 @@ public class Errors {
         id = 1;
         mistCbHashMap = new HashMap<>();
         wishCbHashMap = new HashMap<>();
-        RequestInterface.getInstance().registerMistRpcErrorHandler(new RequestInterface.Error() {
+      /*  RequestInterface.getInstance().registerMistRpcErrorHandler(new RequestInterface.Error() {
             @Override
             public void cb(String op, int code, String msg) {
                 mistError(op, code, msg);
             }
         });
-
+ */
         wishApp.RequestInterface.getInstance().registerWishRpcErrorHandler(new wishApp.RequestInterface.Error() {
             @Override
             public void cb(String op, int code, String msg) {

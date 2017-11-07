@@ -96,7 +96,7 @@ class IdentityFriendRequest {
 
 
     static void requestDocument(final byte[] luid, final BsonDocument contact, final Peer peer, Identity.FriendRequestCb callback) {
-        Identity.export(peer.getRemoteId(), new Identity.ExportCb() {
+        Identity.export(peer.getRuid(), new Identity.ExportCb() {
 
             private Identity.FriendRequestCb callback;
 
@@ -107,9 +107,9 @@ class IdentityFriendRequest {
                 BsonWriter dataWriter = new BsonBinaryWriter(dataBuffer);
                 dataWriter.writeStartDocument();
                 dataWriter.writeString("alias", new RawBsonDocument(data).getString("alias").getValue());
-                dataWriter.writeBinaryData("uid", new BsonBinary(peer.getRemoteId()));
-                dataWriter.writeBinaryData("hid", new BsonBinary(peer.getRemoteHostId()));
-                dataWriter.writeBinaryData("sid", new BsonBinary(peer.getRemoteServiceId()));
+                dataWriter.writeBinaryData("uid", new BsonBinary(peer.getRuid()));
+                dataWriter.writeBinaryData("hid", new BsonBinary(peer.getRhid()));
+                dataWriter.writeBinaryData("sid", new BsonBinary(peer.getRsid()));
                 dataWriter.writeBinaryData("pubkey", new RawBsonDocument(data).getBinary("pubkey"));
                 dataWriter.writeEndDocument();
                 dataWriter.flush();
@@ -131,9 +131,9 @@ class IdentityFriendRequest {
                     @Override
                     public void cb(ArrayList<wishApp.Connection> connections) {
                         for (wishApp.Connection connection : connections) {
-                            if (Arrays.equals(connection.getLuid(), peer.getLocalId()) && Arrays.equals(connection.getRhid(), peer.getRemoteHostId()) && Arrays.equals(connection.getRuid(), peer.getRemoteId())) {
+                            if (Arrays.equals(connection.getLuid(), peer.getLuid()) && Arrays.equals(connection.getRhid(), peer.getRhid()) && Arrays.equals(connection.getRuid(), peer.getRuid())) {
 
-                                Identity.sign(connection, peer.getRemoteId(), new RawBsonDocument(cert), new Identity.SignCb() {
+                                Identity.sign(connection, peer.getRuid(), new RawBsonDocument(cert), new Identity.SignCb() {
 
                                     private Identity.FriendRequestCb callback;
 
