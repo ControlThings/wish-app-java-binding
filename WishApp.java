@@ -37,10 +37,10 @@ public class WishApp {
         if (appName.length() > 32) {
             appName = appName.substring(0, 32);
         }
-        startWishApp(appName);
+        startWishApp(appName, new WishFile(context));
     }
 
-    synchronized native void startWishApp(String appName);
+    synchronized native void startWishApp(String appName, WishFile wishFile);
     synchronized native void stopWishApp();
 
     /**
@@ -50,7 +50,7 @@ public class WishApp {
      */
     public synchronized native int request(byte[] req, RequestCb cb); //will call  wish_app_core_with_cb_context
 
-    public synchronized native int requestCancel(int id);
+    public synchronized native void requestCancel(int id);
 
     /** This method simply pretty-prints a BSON object to the system console
      * @param tag the console log tag
@@ -66,70 +66,6 @@ public class WishApp {
     void offline(byte[] peerBson) {
 
     }
-
-    /**
-     * Open a file
-     *
-     * @param filename the filename
-     * @return the file ID number which can be used with read, write..., or -1 for an error
-     */
-    public int openFile(String filename) {
-        return file.open(filename);
-    }
-
-    /**
-     * Close a fileId
-     *
-     * @param fileId the fileId to close
-     * @return 0 for success, -1 for an error
-     */
-    public int closeFile(int fileId) {
-        return file.close(fileId);
-    }
-
-    /**
-     * Read from a file
-     *
-     * @param fileId the fileId, obtained with open()
-     * @param buffer The buffer to place the bytes into
-     * @param count  the number of bytes to read
-     * @return the amount of bytes read, or 0 if EOF, or -1 for an error
-     */
-    public int readFile(int fileId, byte[] buffer, int count) {
-        if (count != buffer.length) {
-            return -1;
-        }
-        return file.read(fileId, buffer, count);
-    }
-
-    /**
-     * Write to a file in internal storage
-     *
-     * @param fileId the fileId
-     * @param buffer the databuffer to be written
-     * @param count  The
-     * @return
-     */
-    public int writeFile(int fileId, byte[] buffer, int count) {
-        if (count != buffer.length) {
-            return -1;
-        } else {
-            return file.write(fileId, buffer);
-        }
-    }
-
-    public int seekFile(int fileId, int offset, int whence) {
-        return (int) file.seek(fileId, offset, whence);
-    }
-
-    public int rename(String oldName, String newName) {
-        return file.rename(oldName, newName);
-    }
-
-    public int remove(String filename) {
-        return file.remove(filename);
-    }
-
 
     public abstract static class RequestCb {
 
