@@ -17,16 +17,14 @@ public class WishApp {
     private Context context;
     private WishFile file;
 
-    private static List<Error> wishErrorHandleList;
+    private static List<Error> wishErrorHandleList = new ArrayList<>();;
 
     static {
         System.loadLibrary("mist");
     }
 
     /* Private constructor must exist to enforce Singleton pattern */
-    private WishApp() {
-        wishErrorHandleList = new ArrayList<>();
-    }
+    private WishApp() {}
 
 
     private static class MistNodeHolder {
