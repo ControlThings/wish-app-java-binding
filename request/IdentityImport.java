@@ -56,7 +56,6 @@ class IdentityImport {
                     byte[] userId = bsonData.get("uid").asBinary().getData();
                     callback.cb(importAlias, userId);
                 } catch (BSONException e) {
-                    Errors.wishError(op, bsonException, e.getMessage(), dataBson);
                     callback.err(bsonException, "bson error: " + e.getMessage());
                 }
             }

@@ -50,14 +50,12 @@ class WishVersion {
                     String version = bson.get("data").asString().getValue();
                     callback.cb(version);
                 } catch (BSONException e) {
-                    Errors.wishError(op, bsonException, e.getMessage(), dataBson);
                     callback.err(bsonException, "bson error: " + e.getMessage());
                 }
             }
 
             @Override
             public void err(int code, String msg) {
-                Log.d(op, "RPC error: " + msg + " code: " + code);
                 callback.err(code, msg);
             }
 

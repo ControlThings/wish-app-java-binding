@@ -68,14 +68,12 @@ class WishSignals {
                 }
                 callback.cb(signalData);
             } catch (BSONException e) {
-                Errors.wishError(signalsOp, bsonException, e.getMessage(), dataBson);
                 callback.err(bsonException, "bson error: " + e.getMessage());
             }
             }
 
             @Override
             public void err(int code, String msg) {
-                Log.d(signalsOp, "RPC error: " + msg + " code: " + code);
                 callback.err(code, msg);
             }
 

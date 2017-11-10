@@ -50,7 +50,6 @@ class ConnectionDisconnect {
                     BsonDocument bson = new RawBsonDocument(dataBson);
                     callback.cb(bson.get("data").asBoolean().getValue());
                 } catch (BSONException e) {
-                    Errors.wishError(op, 333, e.getMessage(), dataBson);
                     callback.err(333, "bson error: " + e.getMessage());
                 }
             }

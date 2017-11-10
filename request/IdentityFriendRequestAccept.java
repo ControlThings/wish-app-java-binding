@@ -75,14 +75,12 @@ class IdentityFriendRequestAccept {
                     boolean state = bson.getBoolean("data").getValue();
                     callback.cb(state);
                 } catch (BSONException e) {
-                    Errors.wishError(acceptOp, 333, e.getMessage(), dataBson);
                     callback.err(333, "bson error: " + e.getMessage());
                 }
             }
 
             @Override
             public void err(int code, String msg) {
-                Log.d(acceptOp, "RPC error: " + msg + " code: " + code);
                 callback.err(code, msg);
             }
 

@@ -2,7 +2,11 @@ package wishApp;
 
 import android.content.Context;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import addon.WishFile;
+import mistNode.MistNode;
 
 
 /**
@@ -13,12 +17,16 @@ public class WishApp {
     private Context context;
     private WishFile file;
 
+    private static List<Error> wishErrorHandleList;
+
     static {
         System.loadLibrary("mist");
     }
 
     /* Private constructor must exist to enforce Singleton pattern */
-    private WishApp() {}
+    private WishApp() {
+        wishErrorHandleList = new ArrayList<>();
+    }
 
 
     private static class MistNodeHolder {
@@ -130,6 +138,15 @@ public class WishApp {
         return file.remove(filename);
     }
 
+    static void registerWishRpcErrorHandler(Error error) {
+        synchronized (wishErrorHandleList) {
+            wishErrorHandleList.add(error);
+        }
+    }
+
+    interface Error {
+        public void cb(int code, String msg);
+    }
 
     public abstract static class RequestCb {
 
@@ -161,6 +178,12 @@ public class WishApp {
          * @param code the error code
          * @param msg  a free-text error message
          */
-        public abstract void err(int code, String msg);
+        public void err(int code, String msg) {
+            synchronized (wishErrorHandleList) {
+                for (Error error : wishErrorHandleList) {
+                    error.cb(code, msg);
+                }
+            }
+        };
     }
 }

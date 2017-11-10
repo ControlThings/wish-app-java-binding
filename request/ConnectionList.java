@@ -63,7 +63,6 @@ class ConnectionList {
                     }
                     callback.cb(connections);
                 } catch (BSONException e) {
-                    Errors.wishError(op, 333, e.getMessage(), dataBson);
                     callback.err(333, "bson error: " + e.getMessage());
                 }
             }

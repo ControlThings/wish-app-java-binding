@@ -77,7 +77,6 @@ class IdentityExport {
 
                     callback.cb(data, dataBson);
                 } catch (BSONException e) {
-                    Errors.wishError(exportOp, 333, e.getMessage(), dataBson);
                     callback.err(333, "bson error..: " + e.getMessage());
                 }
             }

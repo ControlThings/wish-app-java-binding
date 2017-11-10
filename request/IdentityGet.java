@@ -53,7 +53,6 @@ class IdentityGet {
                     identity.setPrivkey(bsonDocument.get("privkey").asBoolean().getValue());
                     callback.cb(identity);
                 } catch (BSONException e) {
-                    Errors.wishError(op, bsonException, e.getMessage(), dataBson);
                     callback.err(bsonException, "bson error: " + e.getMessage());
                 }
 

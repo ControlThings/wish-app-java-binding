@@ -48,14 +48,12 @@ class WldListFriendRequests {
                     BsonDocument bson = new RawBsonDocument(dataBson);
                     callback.cb(bson.get("data").asDocument());
                 } catch (BSONException e) {
-                    Errors.wishError(op, bsonException, e.getMessage(), dataBson);
                     callback.err(bsonException, "bson error: " + e.getMessage());
                 }
             }
 
             @Override
             public void err(int code, String msg) {
-                Log.d(op, "RPC error: " + msg + " code: " + code);
                 callback.err(code, msg);
             }
 

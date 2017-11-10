@@ -78,14 +78,12 @@ class IdentityFriendRequestList {
                     }
                     callback.cb(identitys);
                 } catch (BSONException e) {
-                    Errors.wishError(listOp, bsonException, e.getMessage(), dataBson);
                     callback.err(bsonException, "bson error: " + e.getMessage());
                 }
             }
 
             @Override
             public void err(int code, String msg) {
-                Log.d(listOp, "RPC error: " + msg + " code: " + code);
                 callback.err(code, msg);
             }
 

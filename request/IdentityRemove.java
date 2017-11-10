@@ -70,14 +70,12 @@ class IdentityRemove {
                     BsonDocument bson = new RawBsonDocument(dataBson);
                     callback.cb(bson.get("data").asBoolean().getValue());
                 } catch (BSONException e) {
-                    Errors.wishError(removeOp, bsonException, e.getMessage(), dataBson);
                     callback.err(bsonException, "bson error: " + e.getMessage());
                 }
             }
 
             @Override
             public void err(int code, String msg) {
-                Log.d(removeOp, "RPC error: " + msg + " code: " + code);
                 callback.err(code, msg);
             }
 

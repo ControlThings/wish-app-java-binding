@@ -80,14 +80,12 @@ class IdentityFriendRequestDecline {
                         callback.err(bsonError, "data not boolean");
                     }
                 } catch (BSONException e) {
-                    Errors.wishError(declineOp, bsonException, e.getMessage(), dataBson);
                     callback.err(bsonException, "bson error: " + e.getMessage());
                 }
             }
 
             @Override
             public void err(int code, String msg) {
-                Log.d(declineOp, "RPC error: " + msg + " code: " + code);
                 callback.err(code, msg);
             }
 
