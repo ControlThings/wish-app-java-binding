@@ -156,9 +156,9 @@ public class Peer implements Serializable {
         Peer peer = (Peer) object;
 
         return Arrays.equals(luid, peer.getLuid())
-                && Arrays.equals(rhid, peer.getRuid())
+                && Arrays.equals(ruid, peer.getRuid())
                 && Arrays.equals(rhid, peer.getRhid())
-                && Arrays.equals(rsid, peer.getRhid())
+                && Arrays.equals(rsid, peer.getRsid())
                 && protocol.equals(peer.getProtocol());
     }
 }
