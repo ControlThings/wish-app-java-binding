@@ -1,37 +1,36 @@
 package wishApp.newApi.request;
 
+import android.util.Log;
+
 import org.bson.BSONException;
-import org.bson.BsonArray;
-import org.bson.BsonBinary;
 import org.bson.BsonBinaryWriter;
 import org.bson.BsonDocument;
 import org.bson.BsonWriter;
 import org.bson.RawBsonDocument;
 import org.bson.io.BasicOutputBuffer;
 
-import bson.BsonExtendedBinaryWriter;
-import bson.BsonExtendedWriter;
-import wishApp.*;
+import wishApp.RequestInterface;
+import wishApp.WishApp;
 
 import static wishApp.newApi.request.Callback.BSON_ERROR_CODE;
 import static wishApp.newApi.request.Callback.BSON_ERROR_STRING;
 
 
-class IdentityRemove {
-    static int request(wishApp.Connection connection, byte[] uid, Identity.RemoveCb callback) {
-        final String op = "identity.remove";
-
-        BsonArray array = new BsonArray();
-        array.add(new BsonBinary(uid));
+/**
+ * Created by jeppe on 10/18/16.
+ */
+class ConnectionDisconnect {
+    static int request(int cid, Connection.DisconectCb callback) {
+        String op = "connections.disconnect";
 
         BasicOutputBuffer buffer = new BasicOutputBuffer();
-        BsonExtendedWriter writer = new BsonExtendedBinaryWriter(buffer);
+        BsonWriter writer = new BsonBinaryWriter(buffer);
         writer.writeStartDocument();
 
         writer.writeString("op", op);
 
         writer.writeStartArray("args");
-        writer.pipeArray(array);
+        writer.writeInt32(cid);
         writer.writeEndArray();
 
         writer.writeInt32("id", 0);
@@ -39,14 +38,14 @@ class IdentityRemove {
         writer.writeEndDocument();
         writer.flush();
 
-        WishApp.RequestCb requestCb = new WishApp.RequestCb() {
-            Identity.RemoveCb cb;
+        return WishApp.getInstance().request(buffer.toByteArray(), new WishApp.RequestCb() {
+            Connection.DisconectCb cb;
 
             @Override
             public void response(byte[] data) {
                 try {
                     BsonDocument bson = new RawBsonDocument(data);
-                    boolean value = bson.getBoolean("data").getValue();
+                    boolean value = bson.get("data").asBoolean().getValue();
                     cb.cb(value);
                 } catch (BSONException e) {
                     cb.err(BSON_ERROR_CODE, BSON_ERROR_STRING);
@@ -64,18 +63,11 @@ class IdentityRemove {
                 cb.err(code, msg);
             }
 
-            private WishApp.RequestCb init(Identity.RemoveCb callback) {
+            private WishApp.RequestCb init(Connection.DisconectCb callback) {
                 this.cb = callback;
                 return this;
             }
 
-        }.init(callback);
-
-        if(connection != null) {
-            return ConnectionRequest.request(connection, op, array, requestCb);
-        } else {
-            return WishApp.getInstance().request(buffer.toByteArray(), requestCb);
-        }
-
+        }.init(callback));
     }
 }

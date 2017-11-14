@@ -2,27 +2,29 @@ package wishApp.newApi.request;
 
 import org.bson.BSONException;
 import org.bson.BsonArray;
-import org.bson.BsonBinary;
-import org.bson.BsonBinaryWriter;
 import org.bson.BsonDocument;
-import org.bson.BsonWriter;
 import org.bson.RawBsonDocument;
 import org.bson.io.BasicOutputBuffer;
 
 import bson.BsonExtendedBinaryWriter;
 import bson.BsonExtendedWriter;
-import wishApp.*;
+import wishApp.Cert;
+import wishApp.WishApp;
 
 import static wishApp.newApi.request.Callback.BSON_ERROR_CODE;
 import static wishApp.newApi.request.Callback.BSON_ERROR_STRING;
 
+/**
+ * Created by jeppe on 11/28/16.
+ */
 
-class IdentityRemove {
-    static int request(wishApp.Connection connection, byte[] uid, Identity.RemoveCb callback) {
-        final String op = "identity.remove";
+class IdentityVerify {
+    static int request(Cert cert, Identity.VerifyCb callback) {
+        String op = "identity.verify";
 
         BsonArray array = new BsonArray();
-        array.add(new BsonBinary(uid));
+        array.add(cert.getCert());
+
 
         BasicOutputBuffer buffer = new BasicOutputBuffer();
         BsonExtendedWriter writer = new BsonExtendedBinaryWriter(buffer);
@@ -39,14 +41,15 @@ class IdentityRemove {
         writer.writeEndDocument();
         writer.flush();
 
-        WishApp.RequestCb requestCb = new WishApp.RequestCb() {
-            Identity.RemoveCb cb;
+       return WishApp.getInstance().request(buffer.toByteArray(), new WishApp.RequestCb() {
+            Identity.VerifyCb cb;
 
             @Override
             public void response(byte[] data) {
                 try {
                     BsonDocument bson = new RawBsonDocument(data);
-                    boolean value = bson.getBoolean("data").getValue();
+                    BsonDocument bsonData = bson.getDocument("data");
+                    boolean value = bsonData.get("data").asBoolean().getValue();
                     cb.cb(value);
                 } catch (BSONException e) {
                     cb.err(BSON_ERROR_CODE, BSON_ERROR_STRING);
@@ -64,18 +67,11 @@ class IdentityRemove {
                 cb.err(code, msg);
             }
 
-            private WishApp.RequestCb init(Identity.RemoveCb callback) {
+            private WishApp.RequestCb init(Identity.VerifyCb callback) {
                 this.cb = callback;
                 return this;
             }
 
-        }.init(callback);
-
-        if(connection != null) {
-            return ConnectionRequest.request(connection, op, array, requestCb);
-        } else {
-            return WishApp.getInstance().request(buffer.toByteArray(), requestCb);
-        }
-
+        }.init(callback));
     }
 }

@@ -12,10 +12,10 @@ import org.bson.io.BasicOutputBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import wishApp.WishApp;
+import wishApp.*;
 
 class IdentityList {
-    static int request(Identity.ListCb callback) {
+    static int request(wishApp.Connection connection, Identity.ListCb callback) {
         String op = "identity.list";
 
 
@@ -33,7 +33,7 @@ class IdentityList {
         writer.writeEndDocument();
         writer.flush();
 
-        return WishApp.getInstance().request(buffer.toByteArray(), new WishApp.RequestCb() {
+        WishApp.RequestCb requestCb =  new WishApp.RequestCb() {
             Identity.ListCb cb;
 
             @Override
@@ -58,6 +58,7 @@ class IdentityList {
 
             @Override
             public void err(int code, String msg) {
+                super.err(code, msg);
                 cb.err(code, msg);
             }
 
@@ -66,6 +67,13 @@ class IdentityList {
                 return this;
             }
 
-        }.init(callback));
+        }.init(callback);
+
+        if (connection != null) {
+            return ConnectionRequest.request(connection, op, new BsonArray(), requestCb);
+        } else {
+            return WishApp.getInstance().request(buffer.toByteArray(),requestCb);
+        }
+
     }
 }

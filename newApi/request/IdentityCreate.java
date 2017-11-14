@@ -57,6 +57,7 @@ class IdentityCreate {
 
             @Override
             public void err(int code, String msg) {
+                super.err(code, msg);
                 cb.err(code, msg);
             }
 
