@@ -1,8 +1,6 @@
 package wishApp.request;
 
 
-import android.util.Log;
-
 import org.bson.BSONException;
 import org.bson.BsonBinaryWriter;
 import org.bson.BsonDocument;
@@ -10,69 +8,64 @@ import org.bson.BsonWriter;
 import org.bson.RawBsonDocument;
 import org.bson.io.BasicOutputBuffer;
 
-import wishApp.MistIdentity;
-import wishApp.Errors;
-import wishApp.RequestInterface;
+import wishApp.WishApp;
+import static wishApp.request.Callback.BSON_ERROR_CODE;
+import static wishApp.request.Callback.BSON_ERROR_STRING;
 
 /**
  * Created by jeppe on 8/23/16.
  */
 class IdentityCreate {
-    static void request(String alias, Identity.CreateCb callback) {
+    static int request(String alias, Identity.CreateCb callback) {
         final String op = "identity.create";
 
         BasicOutputBuffer buffer = new BasicOutputBuffer();
         BsonWriter writer = new BsonBinaryWriter(buffer);
         writer.writeStartDocument();
 
-
+        writer.writeString("op", op);
 
         writer.writeStartArray("args");
-
         writer.writeString(alias);
-
         writer.writeEndArray();
+
+        writer.writeInt32("id", 0);
+
         writer.writeEndDocument();
         writer.flush();
 
-        RequestInterface.getInstance().wishRequest(op, buffer.toByteArray(), new RequestInterface.Callback() {
-            private Identity.CreateCb callback;
+        return WishApp.getInstance().request(buffer.toByteArray(), new WishApp.RequestCb() {
+            Identity.CreateCb cb;
 
             @Override
-            public void ack(byte[] dataBson) {
-                response(dataBson);
-                callback.end();
-            }
-
-            @Override
-            public void sig(byte[] dataBson) {
-                response(dataBson);
-            }
-
-            private void response(byte[] dataBson) {
+            public void response(byte[] data) {
                 try {
-                    BsonDocument bson = new RawBsonDocument(dataBson);
-                    BsonDocument bsonIdentity = bson.get("data").asDocument();
-                    MistIdentity identity = new MistIdentity();
-                    identity.setAlias(bsonIdentity.get("alias").asString().getValue());
-                    identity.setUid(bsonIdentity.get("uid").asBinary().getData());
-                    identity.setPrivkey(bsonIdentity.get("privkey").asBoolean().getValue());
-                    callback.cb(identity);
+                    BsonDocument bson = new RawBsonDocument(data);
+                    BsonDocument bsonDocument = bson.getDocument("data");
+                    wishApp.Identity identity = wishApp.Identity.fromBson(bsonDocument);
+                    cb.cb(identity);
                 } catch (BSONException e) {
-                    callback.err(333, "bson error: " + e.getMessage());
+                    cb.err(BSON_ERROR_CODE, BSON_ERROR_STRING);
                 }
+
+            }
+
+            @Override
+            public void end() {
+                cb.end();
             }
 
             @Override
             public void err(int code, String msg) {
-                Log.d(op, "RPC error: " + msg + " code: " + code);
-                callback.err(code, msg);
+                super.err(code, msg);
+                cb.err(code, msg);
             }
 
-            private RequestInterface.Callback init(Identity.CreateCb callback) {
-                this.callback = callback;
+            private WishApp.RequestCb init(Identity.CreateCb callback) {
+                this.cb = callback;
                 return this;
             }
+
         }.init(callback));
     }
 }

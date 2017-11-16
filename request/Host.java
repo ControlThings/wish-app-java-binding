@@ -10,7 +10,7 @@ public class Host {
         HostConfig.request(callback);
     }
 
-    public interface ConfigCb extends Callback {
+    public interface ConfigCb extends CallbackInterface {
         public void cb(String version, byte[] hid);
     }
 }

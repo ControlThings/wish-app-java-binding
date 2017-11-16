@@ -1,28 +1,56 @@
 package wishApp.request;
 
-import java.util.ArrayList;
+import org.bson.BsonArray;
+
+import java.util.List;
 
 
 /**
- * Created by jeppe on 11/30/16.
+ * Created by jeppe on 11/14/17.
  */
 
 public class Connection {
 
-    public static void disconect(int cid, DisconectCb callback) {
-        ConnectionDisconnect.request(cid, callback);
+    /**
+     *
+     * @param connection wish connection
+     * @param op String op
+     * @param array Bson array
+     * @param callback Connection.RequestCb
+     * @return
+     */
+    public static int request(wishApp.Connection connection, String op, BsonArray array, Connection.RequestCb callback) {
+        return ConnectionRequest.request(connection, op, array, callback);
     }
 
-    public static void list(ListCb callback) {
-        ConnectionList.request(callback);
+    /**
+     *
+     * @param callback Connection.ListCb
+     * @return
+     */
+    public static int list(ListCb callback) {
+       return ConnectionList.request(callback);
     }
 
-    public interface DisconectCb extends Callback {
-        public void cb(boolean state);
+    /**
+     *
+     * @param cid Connection cid
+     * @param callback Connection.DisconectCb
+     * @return
+     */
+    public static int disconect(int cid, DisconectCb callback) {
+       return ConnectionDisconnect.request(cid, callback);
     }
 
+    public abstract static class ListCb extends Callback {
+        public abstract void cb(List<wishApp.Connection> connections);
+    }
 
-    public interface ListCb extends Callback {
-        public void cb(ArrayList<wishApp.Connection> connections);
+    public abstract static class DisconectCb extends Callback {
+        public abstract void cb(boolean value);
+    }
+
+    public abstract static class RequestCb extends Callback {
+        public abstract void cb (byte[] bson);
     }
 }

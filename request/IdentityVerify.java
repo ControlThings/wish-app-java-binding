@@ -1,69 +1,77 @@
 package wishApp.request;
 
-import android.util.Log;
-
 import org.bson.BSONException;
-import org.bson.BsonBinaryWriter;
+import org.bson.BsonArray;
 import org.bson.BsonDocument;
-import org.bson.BsonDocumentReader;
-import org.bson.BsonWriter;
 import org.bson.RawBsonDocument;
 import org.bson.io.BasicOutputBuffer;
 
+import bson.BsonExtendedBinaryWriter;
+import bson.BsonExtendedWriter;
 import wishApp.Cert;
-import wishApp.Errors;
-import wishApp.RequestInterface;
+import wishApp.WishApp;
 
-import static wishApp.RequestInterface.bsonException;
+import static wishApp.request.Callback.BSON_ERROR_CODE;
+import static wishApp.request.Callback.BSON_ERROR_STRING;
 
 /**
  * Created by jeppe on 11/28/16.
  */
 
 class IdentityVerify {
-    static void request(Cert cert, Identity.VerifyCb callback) {
-        final String op = "identity.verify";
+    static int request(Cert cert, Identity.VerifyCb callback) {
+        String op = "identity.verify";
+
+        BsonArray array = new BsonArray();
+        array.add(cert.getCert());
+
 
         BasicOutputBuffer buffer = new BasicOutputBuffer();
-        BsonWriter writer = new BsonBinaryWriter(buffer);
-        BsonDocumentReader bsonDocumentReader = new BsonDocumentReader(cert.getCert());
-        writer.pipe(bsonDocumentReader);
+        BsonExtendedWriter writer = new BsonExtendedBinaryWriter(buffer);
+        writer.writeStartDocument();
+
+        writer.writeString("op", op);
+
+        writer.writeStartArray("args");
+        writer.pipeArray(array);
+        writer.writeEndArray();
+
+        writer.writeInt32("id", 0);
+
+        writer.writeEndDocument();
         writer.flush();
 
-        RequestInterface.getInstance().wishRequest(op, buffer.toByteArray(), new RequestInterface.Callback() {
-            private Identity.VerifyCb callback;
+       return WishApp.getInstance().request(buffer.toByteArray(), new WishApp.RequestCb() {
+            Identity.VerifyCb cb;
 
             @Override
-            public void ack(byte[] dataBson) {
-                response(dataBson);
-                callback.end();
-            }
-
-            @Override
-            public void sig(byte[] dataBson) {
-                response(dataBson);
-            }
-
-            private void response(byte[] dataBson) {
+            public void response(byte[] data) {
                 try {
-                    BsonDocument bson = new RawBsonDocument(dataBson);
+                    BsonDocument bson = new RawBsonDocument(data);
                     BsonDocument bsonData = bson.getDocument("data");
-                    boolean data = bsonData.get("data").asBoolean().getValue();
-                    callback.cb(data);
+                    boolean value = bsonData.get("data").asBoolean().getValue();
+                    cb.cb(value);
                 } catch (BSONException e) {
-                    callback.err(bsonException, "bson error: " + e.getMessage());
+                    cb.err(BSON_ERROR_CODE, BSON_ERROR_STRING);
                 }
             }
 
             @Override
-            public void err(int code, String msg) {
-                callback.err(code, msg);
+            public void end() {
+                cb.end();
             }
 
-            private RequestInterface.Callback init(Identity.VerifyCb callback) {
-                this.callback = callback;
+            @Override
+            public void err(int code, String msg) {
+                super.err(code, msg);
+                cb.err(code, msg);
+            }
+
+            private WishApp.RequestCb init(Identity.VerifyCb callback) {
+                this.cb = callback;
                 return this;
             }
+
         }.init(callback));
     }
 }

@@ -22,11 +22,11 @@ public class Wish {
         return WishSignals.request(connection, callback);
     }
 
-    public interface VersionCb extends Callback {
+    public interface VersionCb extends CallbackInterface {
         public void cb(String version);
     }
 
-    public interface SignalsCb extends Callback {
+    public interface SignalsCb extends CallbackInterface {
         public void cb(String signal);
     }
 

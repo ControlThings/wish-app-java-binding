@@ -1,8 +1,7 @@
 package wishApp.request;
 
-import android.util.Log;
-
 import org.bson.BSONException;
+import org.bson.BsonArray;
 import org.bson.BsonBinary;
 import org.bson.BsonBinaryWriter;
 import org.bson.BsonDocument;
@@ -11,101 +10,83 @@ import org.bson.BsonWriter;
 import org.bson.RawBsonDocument;
 import org.bson.io.BasicOutputBuffer;
 
+import bson.BsonExtendedBinaryWriter;
+import bson.BsonExtendedWriter;
 import wishApp.Connection;
-import wishApp.Errors;
-import wishApp.RequestInterface;
+import wishApp.WishApp;
 
-import static wishApp.RequestInterface.bsonException;
+import static wishApp.request.Callback.BSON_ERROR_CODE;
+import static wishApp.request.Callback.BSON_ERROR_STRING;
 
 /**
  * Created by jeppe on 11/28/16.
  */
 
 class IdentitySign {
-    static void request(Connection connection, byte[] id, BsonDocument cert, Identity.SignCb callback) {
-        final String signOp = "identity.sign";
-        String op = signOp;
+    static int request(Connection connection, byte[] uid, BsonDocument cert, Identity.SignCb callback) {
+        String op = "identity.sign";
+
+        BsonArray array = new BsonArray();
+        array.add(new BsonBinary(uid));
+        array.add(cert);
 
         BasicOutputBuffer buffer = new BasicOutputBuffer();
-        BsonWriter writer = new BsonBinaryWriter(buffer);
+        BsonExtendedWriter writer = new BsonExtendedBinaryWriter(buffer);
         writer.writeStartDocument();
+
+        writer.writeString("op", op);
+
         writer.writeStartArray("args");
-
-        writer.writeBinaryData(new BsonBinary(id));
-
-        BsonDocumentReader bsonDocumentReader = new BsonDocumentReader(cert);
-        writer.pipe(bsonDocumentReader);
-
+        writer.pipeArray(array);
         writer.writeEndArray();
+
+        writer.writeInt32("id", 0);
+
         writer.writeEndDocument();
         writer.flush();
 
-        if (connection != null) {
-            op = ConnectionRequest.getOp();
-            buffer = ConnectionRequest.getBuffer(connection, signOp, new ConnectionRequest.GetRequestArgs() {
-
-                private byte[] id;
-                private BsonDocument cert;
-
-                @Override
-                public void args(BsonWriter writer) {
-                    writer.writeBinaryData(new BsonBinary(id));
-                    BsonDocumentReader bsonDocumentReader1 = new BsonDocumentReader(cert);
-                    writer.pipe(bsonDocumentReader1);
-                }
-
-                private ConnectionRequest.GetRequestArgs init (byte[] id, BsonDocument cert) {
-                    this.id = id;
-                    this.cert = cert;
-                    return this;
-                }
-
-            }.init(id, cert));
-        }
-        RequestInterface.getInstance().wishRequest(op, buffer.toByteArray(), new RequestInterface.Callback() {
-            private Identity.SignCb callback;
+        WishApp.RequestCb requestCb = new WishApp.RequestCb() {
+            Identity.SignCb cb;
 
             @Override
-            public void ack(byte[] dataBson) {
-                response(dataBson);
-                callback.end();
-            }
-
-            @Override
-            public void sig(byte[] dataBson) {
-                response(dataBson);
-            }
-
-            private void response(byte[] dataBson) {
+            public void response(byte[] data) {
                 try {
-                    BsonDocument bson = new RawBsonDocument(dataBson);
+                    BsonDocument bson = new RawBsonDocument(data);
                     BsonDocument bsonData = bson.getDocument("data");
 
-                    //hack to get rid of double data fields
                     BsonDocumentReader reader = new BsonDocumentReader(bsonData);
                     BasicOutputBuffer buffer = new BasicOutputBuffer();
                     BsonWriter writer = new BsonBinaryWriter(buffer);
                     writer.pipe(reader);
                     writer.flush();
 
-                    callback.cb(buffer.toByteArray());
+                    cb.cb(buffer.toByteArray());
                 } catch (BSONException e) {
-                    callback.err(bsonException, "bson error: " + e.getMessage());
+                    cb.err(BSON_ERROR_CODE, BSON_ERROR_STRING);
                 }
             }
 
             @Override
-            public void err(int code, String msg) {
-                callback.err(code, msg);
+            public void end() {
+                cb.end();
             }
 
-            private RequestInterface.Callback init(Identity.SignCb callback) {
-                this.callback = callback;
+            @Override
+            public void err(int code, String msg) {
+                super.err(code, msg);
+                cb.err(code, msg);
+            }
+
+            private WishApp.RequestCb init(Identity.SignCb calback) {
+                this.cb = calback;
                 return this;
             }
-        }.init(callback));
+        }.init(callback);
+
+        if (connection != null) {
+           return wishApp.request.ConnectionRequest.request(connection, op, array, requestCb);
+        } else {
+           return WishApp.getInstance().request(buffer.toByteArray(), requestCb);
+        }
     }
-
-
-
 }

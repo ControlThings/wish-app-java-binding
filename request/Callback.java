@@ -1,10 +1,18 @@
 package wishApp.request;
 
+import android.util.Log;
+
 /**
- * Created by akaustel on 12/8/16.
+ * Created by jeppe on 3/29/17.
  */
 
-public interface Callback {
-    public void err(int code, String msg);
-    public void end();
+abstract class Callback {
+
+    public static final int BSON_ERROR_CODE = 836;
+    public static final String BSON_ERROR_STRING = "Bad BSON structure";
+
+    public void err(int code, String msg) {
+        Log.d("Error", msg + " code: " + code);
+    };
+    public void end(){};
 }

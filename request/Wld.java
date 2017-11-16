@@ -41,31 +41,31 @@ public class Wld {
         WldListFriendRequestsPending.request(callback);
     }
 
-    public interface AcceptFriendRequestCb extends Callback {
+    public interface AcceptFriendRequestCb extends CallbackInterface {
         public void cb();
     }
 
-    public interface ClearCb extends Callback {
+    public interface ClearCb extends CallbackInterface {
         public void cb();
     }
 
-    public interface ConnectCb extends Callback {
+    public interface ConnectCb extends CallbackInterface {
         public void cb();
     }
 
-    public interface FriendRequestCb extends Callback {
+    public interface FriendRequestCb extends CallbackInterface {
         public void cb();
     }
 
-    public interface ListCb extends Callback {
+    public interface ListCb extends CallbackInterface {
         public void cb(ArrayList<LocalDiscovery> connections);
     }
 
-    public interface ListFriendRequestsCb extends Callback {
+    public interface ListFriendRequestsCb extends CallbackInterface {
         public void cb(BsonDocument data);
     }
 
-    public interface ListFriendRequestsPendingCb extends Callback {
+    public interface ListFriendRequestsPendingCb extends CallbackInterface {
         public void cb(BsonDocument data);
     }
 }

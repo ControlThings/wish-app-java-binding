@@ -1,7 +1,5 @@
 package wishApp.request;
 
-import android.util.Log;
-
 import org.bson.BSONException;
 import org.bson.BsonBinaryWriter;
 import org.bson.BsonDocument;
@@ -9,65 +7,64 @@ import org.bson.BsonWriter;
 import org.bson.RawBsonDocument;
 import org.bson.io.BasicOutputBuffer;
 
-import wishApp.Errors;
-import wishApp.RequestInterface;
+import wishApp.WishApp;
+
+import static wishApp.request.Callback.BSON_ERROR_CODE;
+import static wishApp.request.Callback.BSON_ERROR_STRING;
 
 
 /**
  * Created by jeppe on 10/18/16.
  */
 class ConnectionDisconnect {
-    static void request(int cid, Connection.DisconectCb callback) {
-        final String op = "connections.disconnect";
+    static int request(int cid, Connection.DisconectCb callback) {
+        String op = "connections.disconnect";
 
         BasicOutputBuffer buffer = new BasicOutputBuffer();
         BsonWriter writer = new BsonBinaryWriter(buffer);
         writer.writeStartDocument();
+
+        writer.writeString("op", op);
+
         writer.writeStartArray("args");
-
         writer.writeInt32(cid);
-
         writer.writeEndArray();
+
+        writer.writeInt32("id", 0);
+
         writer.writeEndDocument();
         writer.flush();
 
-        RequestInterface.getInstance().wishRequest(op, buffer.toByteArray(), new RequestInterface.Callback() {
-            private Connection.DisconectCb callback;
+        return WishApp.getInstance().request(buffer.toByteArray(), new WishApp.RequestCb() {
+            Connection.DisconectCb cb;
 
             @Override
-            public void ack(byte[] dataBson) {
-                response(dataBson);
-                callback.end();
-            }
-
-            @Override
-            public void sig(byte[] dataBson) {
-                response(dataBson);
-            }
-
-            private void response(byte[] dataBson) {
+            public void response(byte[] data) {
                 try {
-                    BsonDocument bson = new RawBsonDocument(dataBson);
-                    callback.cb(bson.get("data").asBoolean().getValue());
+                    BsonDocument bson = new RawBsonDocument(data);
+                    boolean value = bson.get("data").asBoolean().getValue();
+                    cb.cb(value);
                 } catch (BSONException e) {
-                    callback.err(333, "bson error: " + e.getMessage());
+                    cb.err(BSON_ERROR_CODE, BSON_ERROR_STRING);
                 }
             }
 
             @Override
-            public void err(int code, String msg) {
-                Log.d(op, "RPC error: " + msg + " code: " + code);
-                callback.err(code, msg);
+            public void end() {
+                cb.end();
             }
 
+            @Override
+            public void err(int code, String msg) {
+                super.err(code, msg);
+                cb.err(code, msg);
+            }
 
-
-            private RequestInterface.Callback init(Connection.DisconectCb callback) {
-                this.callback = callback;
+            private WishApp.RequestCb init(Connection.DisconectCb callback) {
+                this.cb = callback;
                 return this;
             }
+
         }.init(callback));
     }
-
-
 }

@@ -1,88 +1,79 @@
 package wishApp.request;
 
-import android.util.Log;
-
 import org.bson.BSONException;
+import org.bson.BsonArray;
 import org.bson.BsonBinary;
-import org.bson.BsonBinaryWriter;
 import org.bson.BsonDocument;
-import org.bson.BsonWriter;
 import org.bson.RawBsonDocument;
 import org.bson.io.BasicOutputBuffer;
 
-import wishApp.Connection;
-import wishApp.Errors;
-import wishApp.RequestInterface;
+import bson.BsonExtendedBinaryWriter;
+import bson.BsonExtendedWriter;
+import wishApp.*;
 
-import static wishApp.RequestInterface.bsonException;
+import static wishApp.request.Callback.BSON_ERROR_CODE;
+import static wishApp.request.Callback.BSON_ERROR_STRING;
+
 
 class IdentityRemove {
-    static void request(Connection connection, byte[] uid, Identity.RemoveCb callback) {
-        final String removeOp = "identity.remove";
-        String op = removeOp;
+    static int request(wishApp.Connection connection, byte[] uid, Identity.RemoveCb callback) {
+        final String op = "identity.remove";
+
+        BsonArray array = new BsonArray();
+        array.add(new BsonBinary(uid));
 
         BasicOutputBuffer buffer = new BasicOutputBuffer();
-        BsonWriter writer = new BsonBinaryWriter(buffer);
+        BsonExtendedWriter writer = new BsonExtendedBinaryWriter(buffer);
         writer.writeStartDocument();
+
+        writer.writeString("op", op);
+
         writer.writeStartArray("args");
-
-        writer.writeBinaryData(new BsonBinary(uid));
-
+        writer.pipeArray(array);
         writer.writeEndArray();
+
+        writer.writeInt32("id", 0);
+
         writer.writeEndDocument();
         writer.flush();
 
-        if (connection != null) {
-            op = ConnectionRequest.getOp();
-            buffer = ConnectionRequest.getBuffer(connection, removeOp, new ConnectionRequest.GetRequestArgs() {
-
-                private byte[] uid;
-
-                @Override
-                public void args(BsonWriter writer) {
-                    writer.writeBinaryData(new BsonBinary(uid));
-                }
-
-                private ConnectionRequest.GetRequestArgs init (byte[] uid) {
-                    this.uid = uid;
-                    return this;
-                }
-
-            }.init(uid));
-        }
-
-        RequestInterface.getInstance().wishRequest(op, buffer.toByteArray(), new RequestInterface.Callback() {
-            private Identity.RemoveCb callback;
+        WishApp.RequestCb requestCb = new WishApp.RequestCb() {
+            Identity.RemoveCb cb;
 
             @Override
-            public void ack(byte[] dataBson) {
-                response(dataBson);
-                callback.end();
-            }
-
-            @Override
-            public void sig(byte[] dataBson) {
-                response(dataBson);
-            }
-
-            private void response(byte[] dataBson) {
+            public void response(byte[] data) {
                 try {
-                    BsonDocument bson = new RawBsonDocument(dataBson);
-                    callback.cb(bson.get("data").asBoolean().getValue());
+                    BsonDocument bson = new RawBsonDocument(data);
+                    boolean value = bson.getBoolean("data").getValue();
+                    cb.cb(value);
                 } catch (BSONException e) {
-                    callback.err(bsonException, "bson error: " + e.getMessage());
+                    cb.err(BSON_ERROR_CODE, BSON_ERROR_STRING);
                 }
+            }
+
+            @Override
+            public void end() {
+                cb.end();
             }
 
             @Override
             public void err(int code, String msg) {
-                callback.err(code, msg);
+                super.err(code, msg);
+                cb.err(code, msg);
             }
 
-            private RequestInterface.Callback init(Identity.RemoveCb callback) {
-                this.callback = callback;
+            private WishApp.RequestCb init(Identity.RemoveCb callback) {
+                this.cb = callback;
                 return this;
             }
-        }.init(callback));
+
+        }.init(callback);
+
+        if(connection != null) {
+            return ConnectionRequest.request(connection, op, array, requestCb);
+        } else {
+            return WishApp.getInstance().request(buffer.toByteArray(), requestCb);
+        }
+
     }
 }

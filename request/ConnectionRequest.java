@@ -1,24 +1,35 @@
 package wishApp.request;
 
+import org.bson.BsonArray;
 import org.bson.BsonBinary;
-import org.bson.BsonBinaryWriter;
-import org.bson.BsonWriter;
 import org.bson.io.BasicOutputBuffer;
 
-import wishApp.Connection;
+import bson.BsonExtendedBinaryWriter;
+import bson.BsonExtendedWriter;
+import wishApp.*;
 
 /**
- * Created by jeppe on 10/18/16.
+ * Created by jeppe on 11/14/17.
  */
+
 class ConnectionRequest {
 
-    static final private String op = "connections.request";
+    static int request(wishApp.Connection connection, String requestOp, BsonArray array, Connection.RequestCb callback) {
+        return send(connection, requestOp, array, callback, null);
+    }
 
-    static BasicOutputBuffer getBuffer(Connection connection, String typeOp, GetRequestArgs args) {
+    static int request(wishApp.Connection connection, String requestOp, BsonArray array, WishApp.RequestCb requestCb) {
+        return send(connection, requestOp, array, null, requestCb);
+    }
+
+    private static int send(wishApp.Connection connection, String requestOp, BsonArray array, Connection.RequestCb callback, WishApp.RequestCb requestCb) {
+        final String op = "connections.request";
 
         BasicOutputBuffer buffer = new BasicOutputBuffer();
-        BsonWriter writer = new BsonBinaryWriter(buffer);
+        BsonExtendedWriter writer = new BsonExtendedBinaryWriter(buffer);
         writer.writeStartDocument();
+
+        writer.writeString("op", op);
 
         writer.writeStartArray("args");
 
@@ -28,25 +39,51 @@ class ConnectionRequest {
         writer.writeBinaryData("rhid", new BsonBinary(connection.getRhid()));
         writer.writeEndDocument();
 
-        writer.writeString(typeOp);
+        writer.writeString(requestOp);
 
         writer.writeStartArray();
-        args.args(writer);
+        writer.pipeArray(array);
         writer.writeEndArray();
 
         writer.writeEndArray();
+
+        writer.writeInt32("id", 0);
+
         writer.writeEndDocument();
         writer.flush();
 
-        return buffer;
+        if (requestCb != null) {
+            return WishApp.getInstance().request(buffer.toByteArray(), requestCb);
+        } else {
+            return WishApp.getInstance().request(buffer.toByteArray(), new WishApp.RequestCb() {
+                Connection.RequestCb cb;
+
+                @Override
+                public void response(byte[] data) {
+                    cb.cb(data);
+                }
+
+                @Override
+                public void end() {
+                    cb.end();
+                }
+
+                @Override
+                public void err(int code, String msg) {
+                    super.err(code, msg);
+                    cb.err(code, msg);
+                }
+
+                private WishApp.RequestCb init(Connection.RequestCb callback) {
+                    this.cb = callback;
+                    return this;
+                }
+
+            }.init(callback));
+        }
+
+
     }
 
-    static String getOp() {
-        return op;
-    }
-
-    interface GetRequestArgs {
-        void args(BsonWriter writer);
-    }
 
 }

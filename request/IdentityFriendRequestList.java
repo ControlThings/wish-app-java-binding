@@ -1,97 +1,93 @@
 package wishApp.request;
 
-import android.util.Log;
-
 import org.bson.BSONException;
 import org.bson.BsonArray;
-import org.bson.BsonBinaryWriter;
 import org.bson.BsonDocument;
 import org.bson.BsonValue;
-import org.bson.BsonWriter;
 import org.bson.RawBsonDocument;
 import org.bson.io.BasicOutputBuffer;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import bson.BsonExtendedBinaryWriter;
+import bson.BsonExtendedWriter;
 import wishApp.Connection;
-import wishApp.Errors;
-import wishApp.Friend;
-import wishApp.RequestInterface;
+import wishApp.WishApp;
+import wishApp.Request;
 
-import static wishApp.RequestInterface.bsonException;
+import static wishApp.request.Callback.BSON_ERROR_CODE;
+import static wishApp.request.Callback.BSON_ERROR_STRING;
 
 class IdentityFriendRequestList {
-    static void request(Connection connection, Identity.FriendRequestListCb callback) {
-        final String listOp = "identity.friendRequestList";
-        String op = listOp;
+    static int request(Connection connection, Identity.FriendRequestListCb callback) {
+        final String op = "identity.friendRequestList";
 
         BasicOutputBuffer buffer = new BasicOutputBuffer();
-        BsonWriter writer = new BsonBinaryWriter(buffer);
+        BsonExtendedWriter writer = new BsonExtendedBinaryWriter(buffer);
         writer.writeStartDocument();
+
+        writer.writeString("op", op);
+
         writer.writeStartArray("args");
         writer.writeEndArray();
+
+        writer.writeInt32("id", 0);
+
         writer.writeEndDocument();
         writer.flush();
 
-        if (connection != null) {
-            op = ConnectionRequest.getOp();
-            buffer = ConnectionRequest.getBuffer(connection, listOp, new ConnectionRequest.GetRequestArgs() {
-
-                @Override
-                public void args(BsonWriter writer) {}
-
-            });
-        }
-
-        RequestInterface.getInstance().wishRequest(op, buffer.toByteArray(), new RequestInterface.Callback() {
-            private Identity.FriendRequestListCb callback;
+        WishApp.RequestCb requestCb = new WishApp.RequestCb() {
+            Identity.FriendRequestListCb cb;
 
             @Override
-            public void ack(byte[] dataBson) {
-                response(dataBson);
-                callback.end();
-            }
-
-            @Override
-            public void sig(byte[] dataBson) {
-                response(dataBson);
-            }
-
-            private void response(byte[] dataBson) {
+            public void response(byte[] data) {
                 try {
-                    BsonDocument bson = new RawBsonDocument(dataBson);
-                    ArrayList<Friend> identitys = new ArrayList<>();
+                    BsonDocument bson = new RawBsonDocument(data);
+                    List<Request> requests = new ArrayList<>();
                     BsonArray bsonArray = new BsonArray(bson.getArray("data"));
                     for (BsonValue listValue : bsonArray) {
-                        Friend identity = new Friend();
+                        Request request = new Request();
                         BsonDocument document = listValue.asDocument();
-                        identity.setLuid(document.get("luid").asBinary().getData());
-                        identity.setRuid(document.get("ruid").asBinary().getData());
-                        identity.setAlias(document.get("alias").asString().getValue());
-                        identity.setPubkey(document.get("pubkey").asBinary().getData());
+                        request.setLuid(document.get("luid").asBinary().getData());
+                        request.setRuid(document.get("ruid").asBinary().getData());
+                        request.setAlias(document.get("alias").asString().getValue());
+                        request.setPubkey(document.get("pubkey").asBinary().getData());
 
                         if (document.containsKey("meta")) {
-                            identity.setMeta(document.getDocument("meta").asDocument());
+                            request.setMeta(document.getDocument("meta").asDocument());
                         }
 
-                        identitys.add(identity);
+                        requests.add(request);
                     }
-                    callback.cb(identitys);
+                    cb.cb(requests);
                 } catch (BSONException e) {
-                    callback.err(bsonException, "bson error: " + e.getMessage());
+                    cb.err(BSON_ERROR_CODE, BSON_ERROR_STRING);
                 }
             }
 
             @Override
-            public void err(int code, String msg) {
-                callback.err(code, msg);
+            public void end() {
+                   cb.end();
             }
 
-            private RequestInterface.Callback init(Identity.FriendRequestListCb callback) {
-                this.callback = callback;
+            @Override
+            public void err(int code, String msg) {
+                super.err(code, msg);
+                cb.err(code, msg);
+            }
+
+            private WishApp.RequestCb init(Identity.FriendRequestListCb callback) {
+                this.cb = callback;
                 return this;
             }
-        }.init(callback));
+        }.init(callback);
+
+        if (connection != null) {
+            return wishApp.request.ConnectionRequest.request(connection, op, new BsonArray(), requestCb);
+        } else {
+            return WishApp.getInstance().request(buffer.toByteArray(), requestCb);
+        }
     }
 }
 

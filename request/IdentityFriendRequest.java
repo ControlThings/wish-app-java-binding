@@ -13,6 +13,7 @@ import org.bson.io.BasicOutputBuffer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import wishApp.Cert;
 import wishApp.Peer;
@@ -128,7 +129,7 @@ class IdentityFriendRequest {
                     private byte[] cert;
 
                     @Override
-                    public void cb(ArrayList<wishApp.Connection> connections) {
+                    public void cb(List<wishApp.Connection> connections) {
                         for (wishApp.Connection connection : connections) {
                             if (Arrays.equals(connection.getLuid(), peer.getLuid()) && Arrays.equals(connection.getRhid(), peer.getRhid()) && Arrays.equals(connection.getRuid(), peer.getRuid())) {
 
