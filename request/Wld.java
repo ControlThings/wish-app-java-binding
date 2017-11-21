@@ -1,11 +1,11 @@
-package wishApp.request;
+package wish.request;
 
 import org.bson.BsonDocument;
 
 
 import java.util.ArrayList;
 
-import wishApp.LocalDiscovery;
+import wish.LocalDiscovery;
 
 /**
  * Created by jeppe on 11/30/16.

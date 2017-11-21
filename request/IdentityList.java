@@ -1,4 +1,4 @@
-package wishApp.request;
+package wish.request;
 
 import org.bson.BSONException;
 import org.bson.BsonArray;
@@ -12,7 +12,16 @@ import org.bson.io.BasicOutputBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+<<<<<<< HEAD
 import wishApp.*;
+=======
+import wish.Connection;
+import wish.Errors;
+import wish.MistIdentity;
+import wish.RequestInterface;
+
+import static wish.RequestInterface.bsonException;
+>>>>>>> 6fcd683c362d9bebffbebfdf4fcd9fa28425ffd8
 
 class IdentityList {
     static int request(wishApp.Connection connection, Identity.ListCb callback) {

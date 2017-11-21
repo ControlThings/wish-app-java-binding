@@ -1,12 +1,16 @@
-package wishApp.request;
+package wish.request;
 
 import org.bson.BsonArray;
 import org.bson.BsonBinary;
 import org.bson.io.BasicOutputBuffer;
 
+<<<<<<< HEAD
 import bson.BsonExtendedBinaryWriter;
 import bson.BsonExtendedWriter;
 import wishApp.*;
+=======
+import wish.Connection;
+>>>>>>> 6fcd683c362d9bebffbebfdf4fcd9fa28425ffd8
 
 /**
  * Created by jeppe on 11/14/17.

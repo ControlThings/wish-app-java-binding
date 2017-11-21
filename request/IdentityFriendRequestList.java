@@ -1,4 +1,4 @@
-package wishApp.request;
+package wish.request;
 
 import org.bson.BSONException;
 import org.bson.BsonArray;
@@ -10,6 +10,7 @@ import org.bson.io.BasicOutputBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+<<<<<<< HEAD
 import bson.BsonExtendedBinaryWriter;
 import bson.BsonExtendedWriter;
 import wishApp.Connection;
@@ -18,6 +19,14 @@ import wishApp.Request;
 
 import static wishApp.request.Callback.BSON_ERROR_CODE;
 import static wishApp.request.Callback.BSON_ERROR_STRING;
+=======
+import wish.Connection;
+import wish.Errors;
+import wish.Friend;
+import wish.RequestInterface;
+
+import static wish.RequestInterface.bsonException;
+>>>>>>> 6fcd683c362d9bebffbebfdf4fcd9fa28425ffd8
 
 class IdentityFriendRequestList {
     static int request(Connection connection, Identity.FriendRequestListCb callback) {

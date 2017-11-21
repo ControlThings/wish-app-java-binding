@@ -1,13 +1,26 @@
+<<<<<<< HEAD
 package wishApp.request;
 ;
+=======
+package wish.request;
+
+>>>>>>> 6fcd683c362d9bebffbebfdf4fcd9fa28425ffd8
 import org.bson.BsonDocument;
 
 import java.util.List;
 
+<<<<<<< HEAD
 import wishApp.Cert;
 import wishApp.Connection;
 import wishApp.Peer;
 import wishApp.Request;
+=======
+import wish.Cert;
+import wish.Connection;
+import wish.Peer;
+import wish.Friend;
+import wish.MistIdentity;
+>>>>>>> 6fcd683c362d9bebffbebfdf4fcd9fa28425ffd8
 
 /**
  * Created by jeppe on 10/24/17.

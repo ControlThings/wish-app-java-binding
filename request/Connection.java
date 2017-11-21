@@ -1,4 +1,4 @@
-package wishApp.request;
+package wish.request;
 
 import org.bson.BsonArray;
 
@@ -50,7 +50,12 @@ public class Connection {
         public abstract void cb(boolean value);
     }
 
+<<<<<<< HEAD
     public abstract static class RequestCb extends Callback {
         public abstract void cb (byte[] bson);
+=======
+    public interface ListCb extends Callback {
+        public void cb(ArrayList<wish.Connection> connections);
+>>>>>>> 6fcd683c362d9bebffbebfdf4fcd9fa28425ffd8
     }
 }

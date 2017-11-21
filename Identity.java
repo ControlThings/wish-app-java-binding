@@ -1,4 +1,8 @@
+<<<<<<< HEAD:Identity.java
 package wishApp;
+=======
+package wish.newApi;
+>>>>>>> 6fcd683c362d9bebffbebfdf4fcd9fa28425ffd8:newApi/Identity.java
 
 import org.bson.BSONException;
 import org.bson.BsonBinary;

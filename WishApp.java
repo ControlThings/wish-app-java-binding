@@ -1,4 +1,4 @@
-package wishApp;
+package wish;
 
 import android.content.Context;
 
@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import addon.WishFile;
-import mistNode.MistNode;
 
 
 /**

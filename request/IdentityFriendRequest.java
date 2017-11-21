@@ -1,4 +1,4 @@
-package wishApp.request;
+package wish.request;
 
 import android.util.Log;
 
@@ -15,10 +15,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import wishApp.Cert;
-import wishApp.Peer;
-import wishApp.Errors;
-import wishApp.RequestInterface;
+import wish.Cert;
+import wish.Peer;
+import wish.Errors;
+import wish.RequestInterface;
 
 /**
  * Created by jeppe on 9/28/16.
@@ -129,8 +129,13 @@ class IdentityFriendRequest {
                     private byte[] cert;
 
                     @Override
+<<<<<<< HEAD
                     public void cb(List<wishApp.Connection> connections) {
                         for (wishApp.Connection connection : connections) {
+=======
+                    public void cb(ArrayList<wish.Connection> connections) {
+                        for (wish.Connection connection : connections) {
+>>>>>>> 6fcd683c362d9bebffbebfdf4fcd9fa28425ffd8
                             if (Arrays.equals(connection.getLuid(), peer.getLuid()) && Arrays.equals(connection.getRhid(), peer.getRhid()) && Arrays.equals(connection.getRuid(), peer.getRuid())) {
 
                                 Identity.sign(connection, peer.getRuid(), new RawBsonDocument(cert), new Identity.SignCb() {

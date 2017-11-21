@@ -1,4 +1,4 @@
-package wishApp.request;
+package wish.request;
 
 import org.bson.BSONException;
 import org.bson.BsonBinaryWriter;
@@ -7,10 +7,15 @@ import org.bson.BsonWriter;
 import org.bson.RawBsonDocument;
 import org.bson.io.BasicOutputBuffer;
 
+<<<<<<< HEAD
 import wishApp.WishApp;
 
 import static wishApp.request.Callback.BSON_ERROR_CODE;
 import static wishApp.request.Callback.BSON_ERROR_STRING;
+=======
+import wish.Errors;
+import wish.RequestInterface;
+>>>>>>> 6fcd683c362d9bebffbebfdf4fcd9fa28425ffd8
 
 
 /**

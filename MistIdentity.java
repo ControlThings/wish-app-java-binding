@@ -1,4 +1,4 @@
-package wishApp;
+package wish;
 
 /**
  * Created by jeppe on 8/19/16.

@@ -1,8 +1,8 @@
-package wishApp.request;
+package wish.request;
 
 
-import wishApp.Connection;
-import wishApp.RequestInterface;
+import wish.Connection;
+import wish.RequestInterface;
 
 /**
  * Created by jeppe on 11/30/16.
