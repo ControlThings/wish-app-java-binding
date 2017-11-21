@@ -5,6 +5,7 @@ import android.content.Context;
 import java.util.ArrayList;
 import java.util.List;
 
+import addon.AddonException;
 import addon.WishFile;
 
 
@@ -13,8 +14,12 @@ import addon.WishFile;
  */
 
 public class WishApp {
-    private Context context;
-    private WishFile file;
+    /** startWishApp return value for success */
+    private static final int WISH_APP_SUCCESS = 0;
+    /** startWishApp return error return if started multiple times */
+    private static final int WISH_APP_ERROR_MULTIPLE_TIMES = -1;
+    /** startWishApp return error return for other errors */
+    private static final int WISH_APP_ERROR_UNSPECIFIED = -10;
 
     private static List<Error> wishErrorHandleList = new ArrayList<>();;
 
@@ -35,17 +40,24 @@ public class WishApp {
     }
 
     public void startWishApp(Context context) {
-        this.context = context;
-        file = new WishFile(context);
-
         String appName = context.getPackageName();
         if (appName.length() > 32) {
             appName = appName.substring(0, 32);
         }
-        startWishApp(appName, new WishFile(context));
+
+        int ret = startWishApp(appName, new WishFile(context));
+
+        if (ret != WISH_APP_SUCCESS) {
+            if (ret == WISH_APP_ERROR_MULTIPLE_TIMES) {
+                throw new AddonException("Addon cannot be started multiple times.");
+            }
+            else {
+                throw new AddonException("Unspecified Addon exception");
+            }
+        }
     }
 
-    synchronized native void startWishApp(String appName, WishFile wishFile);
+    synchronized native int startWishApp(String appName, WishFile wishFile);
     synchronized native void stopWishApp();
 
     /**
