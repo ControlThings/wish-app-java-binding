@@ -12,19 +12,10 @@ import org.bson.io.BasicOutputBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-<<<<<<< HEAD
-import wishApp.*;
-=======
-import wish.Connection;
-import wish.Errors;
-import wish.MistIdentity;
-import wish.RequestInterface;
-
-import static wish.RequestInterface.bsonException;
->>>>>>> 6fcd683c362d9bebffbebfdf4fcd9fa28425ffd8
+import wish.*;
 
 class IdentityList {
-    static int request(wishApp.Connection connection, Identity.ListCb callback) {
+    static int request(wish.Connection connection, Identity.ListCb callback) {
         String op = "identity.list";
 
 
@@ -50,13 +41,13 @@ class IdentityList {
                 try {
                     BsonDocument bson = new RawBsonDocument(data);
                     BsonArray bsonList = bson.getArray("data");
-                    List<wishApp.Identity> list = new ArrayList<wishApp.Identity>();
+                    List<wish.Identity> list = new ArrayList<wish.Identity>();
                     for (BsonValue bsonIdentity : bsonList) {
-                        list.add(wishApp.Identity.fromBson(bsonIdentity.asDocument()));
+                        list.add(wish.Identity.fromBson(bsonIdentity.asDocument()));
                     }
                     cb.cb(list);
                 } catch (BSONException e) {
-                    cb.err(wishApp.request.Callback.BSON_ERROR_CODE, wishApp.request.Callback.BSON_ERROR_STRING);
+                    cb.err(wish.request.Callback.BSON_ERROR_CODE, wish.request.Callback.BSON_ERROR_STRING);
                 }
             }
 
@@ -79,7 +70,7 @@ class IdentityList {
         }.init(callback);
 
         if (connection != null) {
-            return wishApp.request.ConnectionRequest.request(connection, op, new BsonArray(), requestCb);
+            return wish.request.ConnectionRequest.request(connection, op, new BsonArray(), requestCb);
         } else {
             return WishApp.getInstance().request(buffer.toByteArray(),requestCb);
         }

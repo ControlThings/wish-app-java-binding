@@ -7,19 +7,14 @@ import org.bson.BsonDocument;
 import org.bson.RawBsonDocument;
 import org.bson.io.BasicOutputBuffer;
 
-<<<<<<< HEAD
-import bson.BsonExtendedBinaryWriter;
-import bson.BsonExtendedWriter;
-import wishApp.Connection;
-import wishApp.WishApp;
 
-import static wishApp.request.Callback.BSON_ERROR_CODE;
-import static wishApp.request.Callback.BSON_ERROR_STRING;
-=======
+import utils.bson.BsonExtendedBinaryWriter;
+import utils.bson.BsonExtendedWriter;
 import wish.Connection;
-import wish.Errors;
-import wish.RequestInterface;
->>>>>>> 6fcd683c362d9bebffbebfdf4fcd9fa28425ffd8
+import wish.WishApp;
+
+import static wish.request.Callback.BSON_ERROR_CODE;
+import static wish.request.Callback.BSON_ERROR_STRING;
 
 
 class IdentityFriendRequestAccept {
@@ -78,7 +73,7 @@ class IdentityFriendRequestAccept {
         }.init(callback);
 
     if (connection != null) {
-        return wishApp.request.ConnectionRequest.request(connection, op, array, requestCb);
+        return wish.request.ConnectionRequest.request(connection, op, array, requestCb);
     } else {
         return WishApp.getInstance().request(buffer.toByteArray(), requestCb);
     }

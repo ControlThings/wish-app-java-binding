@@ -8,19 +8,11 @@ import org.bson.BsonWriter;
 import org.bson.RawBsonDocument;
 import org.bson.io.BasicOutputBuffer;
 
-<<<<<<< HEAD
-import wishApp.WishApp;
 
-import static wishApp.request.Callback.BSON_ERROR_CODE;
-import static wishApp.request.Callback.BSON_ERROR_STRING;
+import wish.WishApp;
 
-=======
-import wish.MistIdentity;
-import wish.Errors;
-import wish.RequestInterface;
-
-import static wish.RequestInterface.bsonException;
->>>>>>> 6fcd683c362d9bebffbebfdf4fcd9fa28425ffd8
+import static wish.request.Callback.BSON_ERROR_CODE;
+import static wish.request.Callback.BSON_ERROR_STRING;
 
 class IdentityGet {
     static int request(byte[] uid, Identity.GetCb callback) {
@@ -49,7 +41,7 @@ class IdentityGet {
                 try {
                     BsonDocument bson = new RawBsonDocument(data);
                     BsonDocument bsonDocument = bson.getDocument("data");
-                    wishApp.Identity identity = wishApp.Identity.fromBson(bsonDocument);
+                    wish.Identity identity = wish.Identity.fromBson(bsonDocument);
                     cb.cb(identity);
                 } catch (BSONException e) {
                     cb.err(BSON_ERROR_CODE, BSON_ERROR_STRING);

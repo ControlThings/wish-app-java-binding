@@ -10,23 +10,15 @@ import org.bson.io.BasicOutputBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-<<<<<<< HEAD
-import bson.BsonExtendedBinaryWriter;
-import bson.BsonExtendedWriter;
-import wishApp.Connection;
-import wishApp.WishApp;
-import wishApp.Request;
 
-import static wishApp.request.Callback.BSON_ERROR_CODE;
-import static wishApp.request.Callback.BSON_ERROR_STRING;
-=======
+import utils.bson.BsonExtendedBinaryWriter;
+import utils.bson.BsonExtendedWriter;
 import wish.Connection;
-import wish.Errors;
-import wish.Friend;
-import wish.RequestInterface;
+import wish.WishApp;
+import wish.Request;
 
-import static wish.RequestInterface.bsonException;
->>>>>>> 6fcd683c362d9bebffbebfdf4fcd9fa28425ffd8
+import static wish.request.Callback.BSON_ERROR_CODE;
+import static wish.request.Callback.BSON_ERROR_STRING;
 
 class IdentityFriendRequestList {
     static int request(Connection connection, Identity.FriendRequestListCb callback) {
@@ -93,7 +85,7 @@ class IdentityFriendRequestList {
         }.init(callback);
 
         if (connection != null) {
-            return wishApp.request.ConnectionRequest.request(connection, op, new BsonArray(), requestCb);
+            return wish.request.ConnectionRequest.request(connection, op, new BsonArray(), requestCb);
         } else {
             return WishApp.getInstance().request(buffer.toByteArray(), requestCb);
         }

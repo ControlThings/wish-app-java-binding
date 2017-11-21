@@ -1,26 +1,12 @@
-<<<<<<< HEAD
-package wishApp.request;
-;
-=======
 package wish.request;
 
->>>>>>> 6fcd683c362d9bebffbebfdf4fcd9fa28425ffd8
 import org.bson.BsonDocument;
 
 import java.util.List;
 
-<<<<<<< HEAD
-import wishApp.Cert;
-import wishApp.Connection;
-import wishApp.Peer;
-import wishApp.Request;
-=======
 import wish.Cert;
 import wish.Connection;
 import wish.Peer;
-import wish.Friend;
-import wish.MistIdentity;
->>>>>>> 6fcd683c362d9bebffbebfdf4fcd9fa28425ffd8
 
 /**
  * Created by jeppe on 10/24/17.
@@ -224,7 +210,7 @@ public class Identity {
     };
 
     public abstract static class CreateCb extends Callback {
-        public abstract void cb (wishApp.Identity identity);
+        public abstract void cb (wish.Identity identity);
     }
 
     public abstract static class ExportCb extends Callback {
@@ -241,15 +227,15 @@ public class Identity {
     }
 
     public abstract static class ListCb extends Callback {
-        public abstract void cb (List<wishApp.Identity> identities);
+        public abstract void cb (List<wish.Identity> identities);
     }
 
     public abstract static class GetCb extends Callback {
-        public abstract void cb (wishApp.Identity identity);
+        public abstract void cb (wish.Identity identity);
     }
 
     public abstract static class FriendRequestListCb extends Callback {
-        public abstract void cb(List<Request> requests);
+        public abstract void cb(List<wish.Request> requests);
     }
 
     public abstract static class FriendRequestAcceptCb extends Callback {

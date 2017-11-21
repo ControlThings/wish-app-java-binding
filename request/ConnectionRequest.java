@@ -4,13 +4,11 @@ import org.bson.BsonArray;
 import org.bson.BsonBinary;
 import org.bson.io.BasicOutputBuffer;
 
-<<<<<<< HEAD
-import bson.BsonExtendedBinaryWriter;
-import bson.BsonExtendedWriter;
-import wishApp.*;
-=======
-import wish.Connection;
->>>>>>> 6fcd683c362d9bebffbebfdf4fcd9fa28425ffd8
+
+import utils.bson.BsonExtendedBinaryWriter;
+import utils.bson.BsonExtendedWriter;
+import wish.*;
+import wish.request.Connection;
 
 /**
  * Created by jeppe on 11/14/17.
@@ -18,15 +16,15 @@ import wish.Connection;
 
 class ConnectionRequest {
 
-    static int request(wishApp.Connection connection, String requestOp, BsonArray array, Connection.RequestCb callback) {
+    static int request(wish.Connection connection, String requestOp, BsonArray array, Connection.RequestCb callback) {
         return send(connection, requestOp, array, callback, null);
     }
 
-    static int request(wishApp.Connection connection, String requestOp, BsonArray array, WishApp.RequestCb requestCb) {
+    static int request(wish.Connection connection, String requestOp, BsonArray array, WishApp.RequestCb requestCb) {
         return send(connection, requestOp, array, null, requestCb);
     }
 
-    private static int send(wishApp.Connection connection, String requestOp, BsonArray array, Connection.RequestCb callback, WishApp.RequestCb requestCb) {
+    private static int send(wish.Connection connection, String requestOp, BsonArray array, Connection.RequestCb callback, WishApp.RequestCb requestCb) {
         final String op = "connections.request";
 
         BasicOutputBuffer buffer = new BasicOutputBuffer();

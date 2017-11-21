@@ -14,7 +14,7 @@ public class Wish {
         WishVersion.request(callback);
     }
 
-    static int signals(SignalsCb callback) {
+    public static int  signals(SignalsCb callback) {
         return WishSignals.request(null, callback);
     }
 
@@ -26,8 +26,8 @@ public class Wish {
         public void cb(String version);
     }
 
-    public interface SignalsCb extends CallbackInterface {
-        public void cb(String signal);
+    public abstract static class SignalsCb extends Callback {
+        public abstract void cb(String signal);
     }
 
     public static void cancel(int id) {

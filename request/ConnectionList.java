@@ -12,16 +12,10 @@ import org.bson.io.BasicOutputBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import wishApp.WishApp;
+import wish.WishApp;
 
-<<<<<<< HEAD
-import static wishApp.request.Callback.BSON_ERROR_CODE;
-import static wishApp.request.Callback.BSON_ERROR_STRING;
-=======
-import wish.Errors;
-import wish.RequestInterface;
->>>>>>> 6fcd683c362d9bebffbebfdf4fcd9fa28425ffd8
-
+import static wish.request.Callback.BSON_ERROR_CODE;
+import static wish.request.Callback.BSON_ERROR_STRING;
 
 /**
  * Created by jeppe on 9/28/16.
@@ -50,13 +44,8 @@ class ConnectionList {
             @Override
             public void response(byte[] data) {
                 try {
-<<<<<<< HEAD
                     BsonDocument bson = new RawBsonDocument(data);
-                    List<wishApp.Connection> connections = new ArrayList<wishApp.Connection>();
-=======
-                    BsonDocument bson = new RawBsonDocument(dataBson);
-                    ArrayList<wish.Connection> connections = new ArrayList<wish.Connection>();
->>>>>>> 6fcd683c362d9bebffbebfdf4fcd9fa28425ffd8
+                    List<wish.Connection> connections = new ArrayList<wish.Connection>();
                     BsonArray bsonArray = bson.get("data").asArray();
                     for (BsonValue bsonValue : bsonArray) {
                         wish.Connection connection = new wish.Connection();

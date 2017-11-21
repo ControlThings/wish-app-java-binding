@@ -7,24 +7,17 @@ import org.bson.BsonDocument;
 import org.bson.RawBsonDocument;
 import org.bson.io.BasicOutputBuffer;
 
-<<<<<<< HEAD
-import bson.BsonExtendedBinaryWriter;
-import bson.BsonExtendedWriter;
-import wishApp.*;
+import utils.bson.BsonExtendedBinaryWriter;
+import utils.bson.BsonExtendedWriter;
+import wish.*;
 
-import static wishApp.request.Callback.BSON_ERROR_CODE;
-import static wishApp.request.Callback.BSON_ERROR_STRING;
+import static wish.request.Callback.BSON_ERROR_CODE;
+import static wish.request.Callback.BSON_ERROR_STRING;
 
-=======
-import wish.Connection;
-import wish.Errors;
-import wish.RequestInterface;
 
-import static wish.RequestInterface.bsonException;
->>>>>>> 6fcd683c362d9bebffbebfdf4fcd9fa28425ffd8
 
 class IdentityRemove {
-    static int request(wishApp.Connection connection, byte[] uid, Identity.RemoveCb callback) {
+    static int request(wish.Connection connection, byte[] uid, Identity.RemoveCb callback) {
         final String op = "identity.remove";
 
         BsonArray array = new BsonArray();
