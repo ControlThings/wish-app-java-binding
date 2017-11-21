@@ -1,4 +1,4 @@
-package wishApp.request;
+package wish.request;
 
 import android.util.Log;
 
@@ -13,12 +13,12 @@ import org.bson.io.BasicOutputBuffer;
 
 import java.util.ArrayList;
 
-import wishApp.Connection;
-import wishApp.Errors;
-import wishApp.Friend;
-import wishApp.RequestInterface;
+import wish.Connection;
+import wish.Errors;
+import wish.Friend;
+import wish.RequestInterface;
 
-import static wishApp.RequestInterface.bsonException;
+import static wish.RequestInterface.bsonException;
 
 class IdentityFriendRequestList {
     static void request(Connection connection, Identity.FriendRequestListCb callback) {

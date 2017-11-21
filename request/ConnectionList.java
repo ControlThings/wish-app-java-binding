@@ -1,4 +1,4 @@
-package wishApp.request;
+package wish.request;
 
 import android.util.Log;
 
@@ -13,8 +13,8 @@ import org.bson.io.BasicOutputBuffer;
 
 import java.util.ArrayList;
 
-import wishApp.Errors;
-import wishApp.RequestInterface;
+import wish.Errors;
+import wish.RequestInterface;
 
 
 /**
@@ -49,10 +49,10 @@ class ConnectionList {
             private void response(byte[] dataBson) {
                 try {
                     BsonDocument bson = new RawBsonDocument(dataBson);
-                    ArrayList<wishApp.Connection> connections = new ArrayList<wishApp.Connection>();
+                    ArrayList<wish.Connection> connections = new ArrayList<wish.Connection>();
                     BsonArray bsonArray = bson.get("data").asArray();
                     for (BsonValue bsonValue : bsonArray) {
-                        wishApp.Connection connection = new wishApp.Connection();
+                        wish.Connection connection = new wish.Connection();
                         connection.setCid(bsonValue.asDocument().get("cid").asInt32().getValue());
                         connection.setLuid(bsonValue.asDocument().get("luid").asBinary().getData());
                         connection.setRuid(bsonValue.asDocument().get("ruid").asBinary().getData());

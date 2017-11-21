@@ -1,4 +1,4 @@
-package wishApp.newApi.request;
+package wish.newApi.request;
 
 
 import java.util.List;
@@ -68,7 +68,7 @@ public class Identity {
     };
 
     public abstract static class CreateCb extends Callback {
-        public abstract void cb (wishApp.newApi.Identity identity);
+        public abstract void cb (wish.newApi.Identity identity);
     }
 
     public abstract static class ExportCb extends Callback {
@@ -80,11 +80,11 @@ public class Identity {
     }
 
     public abstract static class ListCb extends Callback {
-        public abstract void cb (List<wishApp.newApi.Identity> identities);
+        public abstract void cb (List<wish.newApi.Identity> identities);
     }
 
     public abstract static class GetCb extends Callback {
-        public abstract void cb (wishApp.newApi.Identity identity);
+        public abstract void cb (wish.newApi.Identity identity);
     }
 
     public abstract static class RemoveCb extends Callback {

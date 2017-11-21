@@ -1,4 +1,4 @@
-package wishApp;
+package wish;
 
 import org.bson.BsonArray;
 import org.bson.BsonDocument;

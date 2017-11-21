@@ -1,4 +1,4 @@
-package wishApp.request;
+package wish.request;
 
 /**
  * Created by akaustel on 12/8/16.

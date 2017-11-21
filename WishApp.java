@@ -1,4 +1,4 @@
-package wishApp;
+package wish;
 
 import android.content.Context;
 

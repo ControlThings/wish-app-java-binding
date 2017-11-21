@@ -1,14 +1,14 @@
-package wishApp.request;
+package wish.request;
 
 import org.bson.BsonDocument;
 
 import java.util.ArrayList;
 
-import wishApp.Cert;
-import wishApp.Connection;
-import wishApp.Peer;
-import wishApp.Friend;
-import wishApp.MistIdentity;
+import wish.Cert;
+import wish.Connection;
+import wish.Peer;
+import wish.Friend;
+import wish.MistIdentity;
 
 /**
  * Created by jeppe on 11/30/16.

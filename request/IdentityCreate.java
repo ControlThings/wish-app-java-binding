@@ -1,4 +1,4 @@
-package wishApp.request;
+package wish.request;
 
 
 import android.util.Log;
@@ -10,9 +10,9 @@ import org.bson.BsonWriter;
 import org.bson.RawBsonDocument;
 import org.bson.io.BasicOutputBuffer;
 
-import wishApp.MistIdentity;
-import wishApp.Errors;
-import wishApp.RequestInterface;
+import wish.MistIdentity;
+import wish.Errors;
+import wish.RequestInterface;
 
 /**
  * Created by jeppe on 8/23/16.

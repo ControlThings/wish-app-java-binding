@@ -1,4 +1,4 @@
-package wishApp.newApi.request;
+package wish.newApi.request;
 
 import android.util.Log;
 

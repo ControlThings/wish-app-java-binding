@@ -1,4 +1,4 @@
-package wishApp.newApi.request;
+package wish.newApi.request;
 
 import org.bson.BSONException;
 import org.bson.BsonArray;
@@ -12,7 +12,7 @@ import org.bson.io.BasicOutputBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import wishApp.WishApp;
+import wish.WishApp;
 
 class IdentityList {
     static int request(Identity.ListCb callback) {
@@ -41,9 +41,9 @@ class IdentityList {
                 try {
                     BsonDocument bson = new RawBsonDocument(data);
                     BsonArray bsonList = bson.getArray("data");
-                    List<wishApp.newApi.Identity> list = new ArrayList<wishApp.newApi.Identity>();
+                    List<wish.newApi.Identity> list = new ArrayList<wish.newApi.Identity>();
                     for (BsonValue bsonIdentity : bsonList) {
-                        list.add(wishApp.newApi.Identity.fromBson(bsonIdentity.asDocument()));
+                        list.add(wish.newApi.Identity.fromBson(bsonIdentity.asDocument()));
                     }
                     cb.cb(list);
                 } catch (BSONException e) {

@@ -1,11 +1,11 @@
-package wishApp.request;
+package wish.request;
 
 import org.bson.BsonBinary;
 import org.bson.BsonBinaryWriter;
 import org.bson.BsonWriter;
 import org.bson.io.BasicOutputBuffer;
 
-import wishApp.Connection;
+import wish.Connection;
 
 /**
  * Created by jeppe on 10/18/16.

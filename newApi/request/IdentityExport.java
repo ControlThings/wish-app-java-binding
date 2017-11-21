@@ -1,4 +1,4 @@
-package wishApp.newApi.request;
+package wish.newApi.request;
 
 import org.bson.BSONException;
 import org.bson.BsonBinary;
@@ -10,10 +10,10 @@ import org.bson.BsonWriter;
 import org.bson.RawBsonDocument;
 import org.bson.io.BasicOutputBuffer;
 
-import wishApp.WishApp;
+import wish.WishApp;
 
-import static wishApp.newApi.request.Callback.BSON_ERROR_CODE;
-import static wishApp.newApi.request.Callback.BSON_ERROR_STRING;
+import static wish.newApi.request.Callback.BSON_ERROR_CODE;
+import static wish.newApi.request.Callback.BSON_ERROR_STRING;
 
 /**
  * Created by jeppe on 11/28/16.

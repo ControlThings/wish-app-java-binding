@@ -1,4 +1,4 @@
-package wishApp.newApi;
+package wish.newApi;
 
 import org.bson.BSONException;
 import org.bson.BsonBinary;
