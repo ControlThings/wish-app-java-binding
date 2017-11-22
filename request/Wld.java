@@ -1,9 +1,6 @@
 package wish.request;
 
-import org.bson.BsonDocument;
-
-
-import java.util.ArrayList;
+import java.util.List;
 
 import wish.LocalDiscovery;
 
@@ -13,59 +10,63 @@ import wish.LocalDiscovery;
 
 public class Wld {
 
-    public static void acceptFriendRequest(String id, AcceptFriendRequestCb callback) {
-        WldAcceptFriendRequest.request(id,callback);
+    /**
+     *
+     * @param callback Wld.ListCb
+     * @return
+     */
+    public static int list(ListCb callback) {
+       return WldList.request(callback);
     }
 
-    public static void clear(ClearCb callback) {
-        WldClear.request(callback);
+    /**
+     *
+     * @param callback Wld.ClearCb
+     * @return
+     */
+    public static int clear(ClearCb callback) {
+       return WldClear.request(callback);
     }
 
-    public static void connect(ConnectCb callback) {
-        WldConnect.request(callback);
+    /**
+     *
+     * @param callback Wld.AnnounceCb
+     * @return
+     */
+    public static int announce(AnnounceCb callback) {
+     return WldAnnounce.request(callback);
     }
 
-    public static void friendRequest(byte[] luid, byte[] ruid, byte[] rhid, Wld.FriendRequestCb callback) {
-        WldFriendRequest.request(luid, ruid, rhid, callback);
+    /**
+     *
+     * @param luid Byte array of identity luid
+     * @param ruid Byte array of identity ruid
+     * @param rhid Byte array of identity rhid
+     * @param callback Wld.FriendRequest
+     * @return
+     */
+    public static int friendRequest(byte[] luid, byte[] ruid, byte[] rhid, Wld.FriendRequestCb callback) {
+       return WldFriendRequest.request(luid, ruid, rhid, callback);
     }
 
-    public static void list(ListCb callback) {
-        WldList.request(callback);
+    public abstract static class ListCb extends Callback {
+        public abstract void cb(List<LocalDiscovery> localDiscoveries);
     }
 
-    public static void listFriendRequests(ListFriendRequestsCb callback) {
-        WldListFriendRequests.request(callback);
+
+    public abstract static class ClearCb extends Callback {
+        public abstract void cb(boolean value);
     }
 
-    public static void listFriendRequestsPending(ListFriendRequestsPendingCb callback) {
-        WldListFriendRequestsPending.request(callback);
+
+    public abstract static class AnnounceCb extends Callback {
+        public abstract void cb(boolean value);
     }
 
-    public interface AcceptFriendRequestCb extends CallbackInterface {
-        public void cb();
+    public abstract static class FriendRequestCb extends Callback {
+        public abstract void cb(boolean value);
     }
 
-    public interface ClearCb extends CallbackInterface {
-        public void cb();
-    }
 
-    public interface ConnectCb extends CallbackInterface {
-        public void cb();
-    }
 
-    public interface FriendRequestCb extends CallbackInterface {
-        public void cb();
-    }
-
-    public interface ListCb extends CallbackInterface {
-        public void cb(ArrayList<LocalDiscovery> connections);
-    }
-
-    public interface ListFriendRequestsCb extends CallbackInterface {
-        public void cb(BsonDocument data);
-    }
-
-    public interface ListFriendRequestsPendingCb extends CallbackInterface {
-        public void cb(BsonDocument data);
-    }
 }

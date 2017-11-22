@@ -1,8 +1,6 @@
 package wish.request;
 
-
 import wish.Connection;
-import wish.RequestInterface;
 import wish.WishApp;
 
 /**

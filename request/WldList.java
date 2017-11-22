@@ -12,81 +12,88 @@ import org.bson.RawBsonDocument;
 import org.bson.io.BasicOutputBuffer;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import wish.LocalDiscovery;
 import wish.Errors;
 import wish.RequestInterface;
+import wish.WishApp;
 
 import static wish.RequestInterface.bsonException;
+import static wish.request.Callback.BSON_ERROR_CODE;
+import static wish.request.Callback.BSON_ERROR_STRING;
 
 /**
  * Created by jeppe on 9/28/16.
  */
 class WldList {
-    static void request(Wld.ListCb callback) {
+    static int request(Wld.ListCb callback) {
         final String op = "wld.list";
 
         BasicOutputBuffer buffer = new BasicOutputBuffer();
         BsonWriter writer = new BsonBinaryWriter(buffer);
         writer.writeStartDocument();
+
+        writer.writeString("op", op);
+
         writer.writeStartArray("args");
         writer.writeEndArray();
+
+        writer.writeInt32("id", 0);
+
         writer.writeEndDocument();
         writer.flush();
 
-        RequestInterface.getInstance().wishRequest(op, buffer.toByteArray(), new RequestInterface.Callback() {
-            private Wld.ListCb callback;
+        return WishApp.getInstance().request(buffer.toByteArray(), new WishApp.RequestCb() {
+            Wld.ListCb cb;
 
             @Override
-            public void ack(byte[] dataBson) {
-                response(dataBson);
-                callback.end();
-            }
-
-            @Override
-            public void sig(byte[] dataBson) {
-                response(dataBson);
-            }
-
-            private void response(byte[] dataBson) {
+            public void response(byte[] data) {
                 try {
-                    BsonDocument bson = new RawBsonDocument(dataBson);
+                    BsonDocument bson = new RawBsonDocument(data);
                     BsonArray bsonArray = bson.get("data").asArray();
-                    ArrayList<LocalDiscovery> connections = new ArrayList<LocalDiscovery>();
+                    List<LocalDiscovery> localDiscoveries = new ArrayList<LocalDiscovery>();
 
                     for (BsonValue listValue : bsonArray) {
-                        LocalDiscovery connection = new LocalDiscovery();
-                        connection.setType(listValue.asDocument().get("type").asString().getValue());
-                        connection.setAlias(listValue.asDocument().get("alias").asString().getValue());
+                        LocalDiscovery localDiscovery = new LocalDiscovery();
+                        localDiscovery.setType(listValue.asDocument().get("type").asString().getValue());
+                        localDiscovery.setAlias(listValue.asDocument().get("alias").asString().getValue());
                         if (listValue.asDocument().containsKey("luid")) {
-                            connection.setLuid(listValue.asDocument().get("luid").asBinary().getData());
+                            localDiscovery.setLuid(listValue.asDocument().get("luid").asBinary().getData());
                         }
-                        connection.setRuid(listValue.asDocument().get("ruid").asBinary().getData());
-                        connection.setRhid(listValue.asDocument().get("rhid").asBinary().getData());
-                        connection.setPubkey(listValue.asDocument().get("pubkey").asBinary().getData());
+                        localDiscovery.setRuid(listValue.asDocument().get("ruid").asBinary().getData());
+                        localDiscovery.setRhid(listValue.asDocument().get("rhid").asBinary().getData());
+                        localDiscovery.setPubkey(listValue.asDocument().get("pubkey").asBinary().getData());
                         if (listValue.asDocument().containsKey("claim")) {
-                            connection.setClaim(listValue.asDocument().get("claim").asBoolean().getValue());
+                            localDiscovery.setClaim(listValue.asDocument().get("claim").asBoolean().getValue());
                         } else {
-                            connection.setClaim(false);
+                            localDiscovery.setClaim(false);
                         }
 
-                        connections.add(connection);
+                        localDiscoveries.add(localDiscovery);
                     }
-                    callback.cb(connections);
+                    cb.cb(localDiscoveries);
                 } catch (BSONException e) {
-                    callback.err(bsonException, "bson error: " + e.getMessage());
+                    cb.err(BSON_ERROR_CODE, BSON_ERROR_STRING);
                 }
             }
 
             @Override
-            public void err(int code, String msg) {
-                callback.err(code, msg);
+            public void end() {
+                cb.end();
             }
 
-            private RequestInterface.Callback init(Wld.ListCb callback) {
-                this.callback = callback;
+            @Override
+            public void err(int code, String msg) {
+                super.err(code, msg);
+                cb.err(code, msg);
+            }
+
+            private WishApp.RequestCb init(Wld.ListCb callback) {
+                this.cb = callback;
                 return this;
             }
+
         }.init(callback));
     }
 }

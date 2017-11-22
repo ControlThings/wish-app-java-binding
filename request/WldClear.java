@@ -11,56 +11,63 @@ import org.bson.io.BasicOutputBuffer;
 
 import wish.Errors;
 import wish.RequestInterface;
+import wish.WishApp;
 
 import static wish.RequestInterface.bsonException;
+import static wish.request.Callback.BSON_ERROR_CODE;
+import static wish.request.Callback.BSON_ERROR_STRING;
 
 /**
  * Created by jeppe on 10/20/16.
  */
 class WldClear {
-    static void request(Wld.ClearCb callback) {
+    static int request(Wld.ClearCb callback) {
         final String op = "wld.clear";
 
         BasicOutputBuffer buffer = new BasicOutputBuffer();
         BsonWriter writer = new BsonBinaryWriter(buffer);
         writer.writeStartDocument();
+
+        writer.writeString("op", op);
+
         writer.writeStartArray("args");
         writer.writeEndArray();
+
+        writer.writeInt32("id", 0);
+
         writer.writeEndDocument();
         writer.flush();
 
-        RequestInterface.getInstance().wishRequest(op, buffer.toByteArray(), new RequestInterface.Callback() {
-            private Wld.ClearCb callback;
+        return WishApp.getInstance().request(buffer.toByteArray(), new WishApp.RequestCb() {
+            Wld.ClearCb cb;
 
             @Override
-            public void ack(byte[] dataBson) {
-                response(dataBson);
-                callback.end();
-            }
-
-            @Override
-            public void sig(byte[] dataBson) {
-                response(dataBson);
-            }
-
-            private void response(byte[] dataBson) {
+            public void response(byte[] data) {
                 try {
-                    BsonDocument bson = new RawBsonDocument(dataBson);
-                    callback.cb();
+                    BsonDocument bson = new RawBsonDocument(data);
+                    boolean value = bson.getBoolean("data").getValue();
+                    cb.cb(value);
                 } catch (BSONException e) {
-                    callback.err(bsonException, "bson error: " + e.getMessage());
+                    cb.err(BSON_ERROR_CODE, BSON_ERROR_STRING);
                 }
             }
 
             @Override
-            public void err(int code, String msg) {
-                callback.err(code, msg);
+            public void end() {
+                cb.end();
             }
 
-            private RequestInterface.Callback init(Wld.ClearCb callback) {
-                this.callback = callback;
+            @Override
+            public void err(int code, String msg) {
+                super.err(code, msg);
+                cb.err(code, msg);
+            }
+
+            private WishApp.RequestCb init(Wld.ClearCb callback) {
+                this.cb = callback;
                 return this;
             }
+
         }.init(callback));
     }
 }

@@ -12,61 +12,63 @@ import org.bson.io.BasicOutputBuffer;
 
 import wish.Errors;
 import wish.RequestInterface;
+import wish.WishApp;
 
 import static wish.RequestInterface.bsonException;
+import static wish.request.Callback.BSON_ERROR_CODE;
+import static wish.request.Callback.BSON_ERROR_STRING;
 
 /**
  * Created by jeppe on 9/28/16.
  */
 class WldFriendRequest {
-    static void request(byte[] luid, byte[] ruid, byte[] rhid, Wld.FriendRequestCb callback) {
+    static int request(byte[] luid, byte[] ruid, byte[] rhid, Wld.FriendRequestCb callback) {
         final String op = "wld.friendRequest";
 
         BasicOutputBuffer buffer = new BasicOutputBuffer();
         BsonWriter writer = new BsonBinaryWriter(buffer);
         writer.writeStartDocument();
+
+        writer.writeString("op", op);
+
         writer.writeStartArray("args");
-
         writer.writeBinaryData(new BsonBinary(luid));
-
         writer.writeBinaryData(new BsonBinary(ruid));
-
         writer.writeBinaryData(new BsonBinary(rhid));
-
         writer.writeEndArray();
+
+        writer.writeInt32("id", 0);
+
         writer.writeEndDocument();
         writer.flush();
 
-        RequestInterface.getInstance().wishRequest(op, buffer.toByteArray(), new RequestInterface.Callback() {
-            private Wld.FriendRequestCb callback;
+        return WishApp.getInstance().request(buffer.toByteArray(), new WishApp.RequestCb() {
+            Wld.FriendRequestCb cb;
 
             @Override
-            public void ack(byte[] dataBson) {
-                response(dataBson);
-                callback.end();
-            }
-
-            @Override
-            public void sig(byte[] dataBson) {
-                response(dataBson);
-            }
-
-            private void response(byte[] dataBson) {
+            public void response(byte[] data) {
                 try {
-                    BsonDocument bson = new RawBsonDocument(dataBson);
-                    callback.cb();
+                    BsonDocument bson = new RawBsonDocument(data);
+                    boolean value = bson.getBoolean("data").getValue();
+                    cb.cb(value);
                 } catch (BSONException e) {
-                    callback.err(bsonException, "bson error: " + e.getMessage());
+                    cb.err(BSON_ERROR_CODE, BSON_ERROR_STRING);
                 }
             }
 
             @Override
-            public void err(int code, String msg) {
-                callback.err(code, msg);
+            public void end() {
+                cb.end();
             }
 
-            private RequestInterface.Callback init(Wld.FriendRequestCb callback) {
-                this.callback = callback;
+            @Override
+            public void err(int code, String msg) {
+                super.err(code, msg);
+                cb.err(code, msg);
+            }
+
+            private WishApp.RequestCb init(Wld.FriendRequestCb calback) {
+                this.cb = calback;
                 return this;
             }
         }.init(callback));
