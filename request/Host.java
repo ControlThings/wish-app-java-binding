@@ -6,11 +6,11 @@ package wish.request;
 
 public class Host {
 
-    public static void config(ConfigCb callback) {
-        HostConfig.request(callback);
+    public static int config(ConfigCb callback) {
+       return HostConfig.request(callback);
     }
 
-    public interface ConfigCb extends CallbackInterface {
-        public void cb(String version, byte[] hid);
+    public abstract static class ConfigCb extends Callback {
+        public abstract void cb(String version);
     }
 }
