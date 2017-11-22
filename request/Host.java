@@ -6,6 +6,11 @@ package wish.request;
 
 public class Host {
 
+    /**
+     *
+     * @param callback Host.ConfigCb
+     * @return
+     */
     public static int config(ConfigCb callback) {
        return HostConfig.request(callback);
     }

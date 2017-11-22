@@ -11,8 +11,11 @@ import org.bson.io.BasicOutputBuffer;
 
 import wish.Errors;
 import wish.RequestInterface;
+import wish.WishApp;
 
 import static wish.RequestInterface.bsonException;
+import static wish.request.Callback.BSON_ERROR_CODE;
+import static wish.request.Callback.BSON_ERROR_STRING;
 
 /**
  * Created by jeppe on 11/30/16.
@@ -25,46 +28,46 @@ class WishVersion {
         BasicOutputBuffer buffer = new BasicOutputBuffer();
         BsonWriter writer = new BsonBinaryWriter(buffer);
         writer.writeStartDocument();
+
+        writer.writeString("op", op);
+
         writer.writeStartArray("args");
         writer.writeEndArray();
+
+        writer.writeInt32("id", 0);
+
         writer.writeEndDocument();
         writer.flush();
 
-        final int id = RequestInterface.getInstance().wishRequest(op, buffer.toByteArray(), new RequestInterface.Callback() {
-            private Wish.VersionCb callback;
+        return WishApp.getInstance().request(buffer.toByteArray(), new WishApp.RequestCb() {
+            Wish.VersionCb cb;
 
             @Override
-            public void ack(byte[] dataBson) {
-                response(dataBson);
-                callback.end();
-            }
-
-            @Override
-            public void sig(byte[] dataBson) {
-                response(dataBson);
-            }
-
-            private void response(byte[] dataBson) {
+            public void response(byte[] data) {
                 try {
-                    BsonDocument bson = new RawBsonDocument(dataBson);
+                    BsonDocument bson = new RawBsonDocument(data);
                     String version = bson.get("data").asString().getValue();
-                    callback.cb(version);
+                    cb.cb(version);
                 } catch (BSONException e) {
-                    callback.err(bsonException, "bson error: " + e.getMessage());
+                    cb.err(BSON_ERROR_CODE, BSON_ERROR_STRING);
                 }
             }
 
             @Override
-            public void err(int code, String msg) {
-                callback.err(code, msg);
+            public void end() {
+                cb.end();
             }
 
-            private RequestInterface.Callback init(Wish.VersionCb callback) {
-                this.callback = callback;
+            @Override
+            public void err(int code, String msg) {
+                super.err(code, msg);
+                cb.err(code, msg);
+            }
+
+            private WishApp.RequestCb init(Wish.VersionCb callback) {
+                this.cb = callback;
                 return this;
             }
         }.init(callback));
-
-        return id;
     }
 }
