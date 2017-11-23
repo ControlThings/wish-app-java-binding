@@ -15,11 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import wish.LocalDiscovery;
-import wish.Errors;
-import wish.RequestInterface;
 import wish.WishApp;
 
-import static wish.RequestInterface.bsonException;
 import static wish.request.Callback.BSON_ERROR_CODE;
 import static wish.request.Callback.BSON_ERROR_STRING;
 

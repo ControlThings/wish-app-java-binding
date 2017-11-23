@@ -16,6 +16,6 @@ public class Host {
     }
 
     public abstract static class ConfigCb extends Callback {
-        public abstract void cb(String version);
+        public abstract void cb(String version, byte[] hid);
     }
 }

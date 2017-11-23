@@ -42,9 +42,10 @@ class HostConfig {
             public void response(byte[] data) {
                 try {
                     BsonDocument bson = new RawBsonDocument(data);
-                    BsonDocument configDocument = bson.get("data").asDocument();
-                    String version = configDocument.get("version").asString().getValue();
-                    cb.cb(version);
+                    BsonDocument bsonDocument = bson.get("data").asDocument();
+                    String version = bsonDocument.getString("version").getValue();
+                    byte[] hid = bsonDocument.getBinary("hid").getData();
+                    cb.cb(version, hid);
                 } catch (BSONException e) {
                     cb.err(BSON_ERROR_CODE, BSON_ERROR_STRING);
                 }

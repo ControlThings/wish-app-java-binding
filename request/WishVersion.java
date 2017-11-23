@@ -1,7 +1,5 @@
 package wish.request;
 
-import android.util.Log;
-
 import org.bson.BSONException;
 import org.bson.BsonBinaryWriter;
 import org.bson.BsonDocument;
@@ -9,11 +7,8 @@ import org.bson.BsonWriter;
 import org.bson.RawBsonDocument;
 import org.bson.io.BasicOutputBuffer;
 
-import wish.Errors;
-import wish.RequestInterface;
 import wish.WishApp;
 
-import static wish.RequestInterface.bsonException;
 import static wish.request.Callback.BSON_ERROR_CODE;
 import static wish.request.Callback.BSON_ERROR_STRING;
 
