@@ -1,10 +1,13 @@
 package wish;
 
+import java.io.Serializable;
+import java.util.Arrays;
+
 /**
  * Created by jeppe on 12/28/16.
  */
 
-public class Connection {
+public class Connection implements Serializable{
 
     private int cid;
     private byte[] luid;
@@ -50,5 +53,27 @@ public class Connection {
 
     public void setOutgoing(boolean outgoing) {
         this.outgoing = outgoing;
+    }
+
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+
+        if (object == null) {
+            return false;
+        }
+
+        if (getClass() != object.getClass()) {
+            return false;
+        }
+
+        Connection connection = (Connection) object;
+
+        return Arrays.equals(luid, connection.getLuid())
+                && Arrays.equals(ruid, connection.getRuid())
+                && Arrays.equals(rhid, connection.getRhid())
+                && cid == connection.getCid()
+                && outgoing == connection.isOutgoing();
     }
 }

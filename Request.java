@@ -2,13 +2,14 @@ package wish;
 
 import org.bson.BsonDocument;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 /**
  * Created by jeppe on 2/27/17.
  */
 
-public class Request {
+public class Request implements Serializable{
 
     private byte[] luid;
     private byte[] ruid;

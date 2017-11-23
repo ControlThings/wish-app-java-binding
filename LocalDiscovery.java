@@ -1,10 +1,13 @@
 package wish;
 
+import java.io.Serializable;
+import java.util.Arrays;
+
 /**
  * Created by jeppe on 12/15/16.
  */
 
-public class LocalDiscovery {
+public class LocalDiscovery implements Serializable{
 
     private String alias;
     private String type;
@@ -71,5 +74,30 @@ public class LocalDiscovery {
     public void setClaim(boolean claim) {
         this.claim = claim;
     }
+
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+
+        if (object == null) {
+            return false;
+        }
+
+        if (getClass() != object.getClass()) {
+            return false;
+        }
+
+        LocalDiscovery localDiscovery = (LocalDiscovery) object;
+
+
+        return Arrays.equals(luid, localDiscovery.getLuid())
+                && Arrays.equals(ruid, localDiscovery.getRuid())
+                && Arrays.equals(rhid, localDiscovery.getRhid())
+                && Arrays.equals(pubkey, localDiscovery.getPubkey())
+                && alias.equals(localDiscovery.getAlias())
+                && type.equals(localDiscovery.getType());
+    }
+
 }
 

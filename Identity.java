@@ -11,6 +11,7 @@ import org.bson.io.BasicOutputBuffer;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -152,4 +153,24 @@ public class Identity implements Serializable {
         return hosts;
     }
 
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+
+        if (object == null) {
+            return false;
+        }
+
+        if (getClass() != object.getClass()) {
+            return false;
+        }
+
+        Identity identity = (Identity) object;
+
+        return Arrays.equals(uid, identity.getUid())
+                && Arrays.equals(pubkey, identity.getPubkey())
+                && alias.equals(identity.getAlias())
+                && privkey == identity.isPrivkey();
+    }
 }

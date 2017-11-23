@@ -2,11 +2,13 @@ package wish;
 
 import org.bson.BsonDocument;
 
+import java.io.Serializable;
+
 /**
  * Created by jeppe on 8/15/17.
  */
 
-public class Cert {
+public class Cert implements Serializable{
 
     private String alias;
     private BsonDocument cert;
