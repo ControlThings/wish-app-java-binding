@@ -82,12 +82,23 @@ public class Identity {
         return IdentityGet.request(uid, callback);
     };
 
-    //todo change to wishApp
+    /**
+     *
+     * @param luid Byte array of identity uid
+     * @param contact BsonDocument as FriendRequest contact
+     * @param callback
+     */
     public static void friendRequest(byte[] luid, BsonDocument contact, FriendRequestCb callback) {
         IdentityFriendRequest.request(luid, contact, null, callback);
     }
 
-    //todo change to wishApp
+    /**
+     *
+     * @param luid Byte array of identity uid
+     * @param contact BsonDocument as FriendRequest contact
+     * @param peer wish peer
+     * @param callback
+     */
     public static void friendRequest(byte[] luid, BsonDocument contact, Peer peer, FriendRequestCb callback) {
         IdentityFriendRequest.requestDocument(luid, contact, peer, callback);
     }
