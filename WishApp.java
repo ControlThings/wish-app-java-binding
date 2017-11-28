@@ -21,7 +21,7 @@ public class WishApp {
     /** startWishApp return error return for other errors */
     private static final int WISH_APP_ERROR_UNSPECIFIED = -10;
 
-    private static List<Error> wishErrorHandleList = new ArrayList<>();;
+    private static List<Error> errorHandleList = new ArrayList<>();;
 
     static {
         System.loadLibrary("mist");
@@ -84,9 +84,9 @@ public class WishApp {
 
     }
 
-    static void registerWishRpcErrorHandler(Error error) {
-        synchronized (wishErrorHandleList) {
-            wishErrorHandleList.add(error);
+    static void registerRpcErrorHandler(Error error) {
+        synchronized (errorHandleList) {
+            errorHandleList.add(error);
         }
     }
 
@@ -125,8 +125,8 @@ public class WishApp {
          * @param msg  a free-text error message
          */
         public void err(int code, String msg) {
-            synchronized (wishErrorHandleList) {
-                for (Error error : wishErrorHandleList) {
+            synchronized (errorHandleList) {
+                for (Error error : errorHandleList) {
                     error.cb(code, msg);
                 }
             }

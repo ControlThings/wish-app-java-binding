@@ -26,7 +26,7 @@ public class Errors {
     private Errors() {
         id = 1;
         wishCbHashMap = new HashMap<>();
-        WishApp.registerWishRpcErrorHandler(new WishApp.Error() {
+        WishApp.registerRpcErrorHandler(new WishApp.Error() {
             @Override
             public void cb(int code, String msg) {
                 wishError(code, msg);
