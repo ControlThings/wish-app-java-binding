@@ -10,6 +10,7 @@ import org.bson.BsonWriter;
 import org.bson.RawBsonDocument;
 import org.bson.io.BasicOutputBuffer;
 
+import wish.LocalDiscovery;
 import wish.WishApp;
 
 import static wish.request.Callback.BSON_ERROR_CODE;
@@ -19,7 +20,7 @@ import static wish.request.Callback.BSON_ERROR_STRING;
  * Created by jeppe on 9/28/16.
  */
 class WldFriendRequest {
-    static int request(byte[] luid, byte[] ruid, byte[] rhid, Wld.FriendRequestCb callback) {
+    static int request(byte[] luid, LocalDiscovery localDiscovery, Wld.FriendRequestCb callback) {
         final String op = "wld.friendRequest";
 
         BasicOutputBuffer buffer = new BasicOutputBuffer();
@@ -30,8 +31,8 @@ class WldFriendRequest {
 
         writer.writeStartArray("args");
         writer.writeBinaryData(new BsonBinary(luid));
-        writer.writeBinaryData(new BsonBinary(ruid));
-        writer.writeBinaryData(new BsonBinary(rhid));
+        writer.writeBinaryData(new BsonBinary(localDiscovery.getRuid()));
+        writer.writeBinaryData(new BsonBinary(localDiscovery.getRhid()));
         writer.writeEndArray();
 
         writer.writeInt32("id", 0);

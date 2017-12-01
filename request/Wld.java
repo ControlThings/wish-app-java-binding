@@ -40,13 +40,12 @@ public class Wld {
     /**
      *
      * @param luid Byte array of identity luid
-     * @param ruid Byte array of identity ruid
-     * @param rhid Byte array of identity rhid
+     * @param localDiscovery wish localDiscovery
      * @param callback Wld.FriendRequest
      * @return
      */
-    public static int friendRequest(byte[] luid, byte[] ruid, byte[] rhid, Wld.FriendRequestCb callback) {
-       return WldFriendRequest.request(luid, ruid, rhid, callback);
+    public static int friendRequest(byte[] luid, LocalDiscovery localDiscovery, Wld.FriendRequestCb callback) {
+       return WldFriendRequest.request(luid, localDiscovery, callback);
     }
 
     public abstract static class ListCb extends Callback {
