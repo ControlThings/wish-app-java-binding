@@ -10,6 +10,8 @@ import utils.bson.BsonExtendedWriter;
 import wish.*;
 import wish.request.Connection;
 
+import static wish.WishApp.bsonConsolePrettyPrinter;
+
 /**
  * Created by jeppe on 11/14/17.
  */

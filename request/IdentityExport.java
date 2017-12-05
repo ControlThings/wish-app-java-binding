@@ -1,5 +1,7 @@
 package wish.request;
 
+import android.util.Log;
+
 import org.bson.BSONException;
 import org.bson.BsonArray;
 import org.bson.BsonBinary;
@@ -53,22 +55,20 @@ class IdentityExport {
 
             @Override
             public void response(byte[] data) {
+                BasicOutputBuffer outputBuffer = new BasicOutputBuffer();
+                byte[] bsonData;
                 try {
                     BsonDocument bson = new RawBsonDocument(data);
                     BsonDocument bsonDocument = bson.getDocument("data");
-
-                    byte[] bsonData = bsonDocument.getBinary("data").getData();
-
+                    bsonData = bsonDocument.getBinary("data").getData();
                     BsonReader bsonReader = new BsonDocumentReader(bsonDocument);
-
-                    BasicOutputBuffer outputBuffer = new BasicOutputBuffer();
                     BsonWriter bsonWriter = new BsonBinaryWriter(outputBuffer);
                     bsonWriter.pipe(bsonReader);
-
-                    cb.cb(bsonData, outputBuffer.toByteArray());
                 } catch (BSONException e) {
                     cb.err(BSON_ERROR_CODE, BSON_ERROR_STRING);
+                    return;
                 }
+                cb.cb(bsonData, data);
             }
             @Override
             public void end() {
