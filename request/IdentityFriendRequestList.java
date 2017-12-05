@@ -43,9 +43,10 @@ class IdentityFriendRequestList {
 
             @Override
             public void response(byte[] data) {
+                List<Request> requests;
                 try {
                     BsonDocument bson = new RawBsonDocument(data);
-                    List<Request> requests = new ArrayList<>();
+                    requests = new ArrayList<>();
                     BsonArray bsonArray = new BsonArray(bson.getArray("data"));
                     for (BsonValue listValue : bsonArray) {
                         Request request = new Request();
@@ -61,10 +62,11 @@ class IdentityFriendRequestList {
 
                         requests.add(request);
                     }
-                    cb.cb(requests);
                 } catch (BSONException e) {
                     cb.err(BSON_ERROR_CODE, BSON_ERROR_STRING);
+                    return;
                 }
+                cb.cb(requests);
             }
 
             @Override

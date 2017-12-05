@@ -38,17 +38,18 @@ class IdentityImport {
 
             @Override
             public void response(byte[] data) {
+                String alias;
+                byte[] uid;
                 try {
                     BsonDocument bson = new RawBsonDocument(data);
                     BsonDocument bsonDocument = bson.getDocument("data");
-
-                    String alias = bsonDocument.getString("alias").getValue();
-                    byte[] uid = bsonDocument.getBinary("uid").getData();
-
-                    cb.cb(alias, uid);
+                    alias = bsonDocument.getString("alias").getValue();
+                    uid = bsonDocument.getBinary("uid").getData();
                 } catch (BSONException e) {
                     cb.err(BSON_ERROR_CODE, BSON_ERROR_STRING);
+                    return;
                 }
+                cb.cb(alias, uid);
             }
 
             @Override

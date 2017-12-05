@@ -39,13 +39,16 @@ class ConnectionDisconnect {
 
             @Override
             public void response(byte[] data) {
+                boolean value;
                 try {
                     BsonDocument bson = new RawBsonDocument(data);
-                    boolean value = bson.get("data").asBoolean().getValue();
-                    cb.cb(value);
+                    value = bson.get("data").asBoolean().getValue();
+
                 } catch (BSONException e) {
                     cb.err(BSON_ERROR_CODE, BSON_ERROR_STRING);
+                    return;
                 }
+                cb.cb(value);
             }
 
             @Override

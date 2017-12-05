@@ -38,14 +38,16 @@ class IdentityGet {
 
             @Override
             public void response(byte[] data) {
+                wish.Identity identity;
                 try {
                     BsonDocument bson = new RawBsonDocument(data);
                     BsonDocument bsonDocument = bson.getDocument("data");
-                    wish.Identity identity = wish.Identity.fromBson(bsonDocument);
-                    cb.cb(identity);
+                    identity = wish.Identity.fromBson(bsonDocument);
                 } catch (BSONException e) {
                     cb.err(BSON_ERROR_CODE, BSON_ERROR_STRING);
+                    return;
                 }
+                cb.cb(identity);
             }
 
             @Override

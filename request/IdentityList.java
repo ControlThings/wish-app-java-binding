@@ -38,17 +38,19 @@ class IdentityList {
 
             @Override
             public void response(byte[] data) {
+                List<wish.Identity> list;
                 try {
                     BsonDocument bson = new RawBsonDocument(data);
                     BsonArray bsonList = bson.getArray("data");
-                    List<wish.Identity> list = new ArrayList<wish.Identity>();
+                    list = new ArrayList<wish.Identity>();
                     for (BsonValue bsonIdentity : bsonList) {
                         list.add(wish.Identity.fromBson(bsonIdentity.asDocument()));
                     }
-                    cb.cb(list);
                 } catch (BSONException e) {
                     cb.err(wish.request.Callback.BSON_ERROR_CODE, wish.request.Callback.BSON_ERROR_STRING);
+                    return;
                 }
+                cb.cb(list);
             }
 
             @Override

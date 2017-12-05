@@ -51,20 +51,20 @@ class IdentitySign {
 
             @Override
             public void response(byte[] data) {
+                BasicOutputBuffer buffer;
                 try {
                     BsonDocument bson = new RawBsonDocument(data);
                     BsonDocument bsonData = bson.getDocument("data");
-
                     BsonDocumentReader reader = new BsonDocumentReader(bsonData);
-                    BasicOutputBuffer buffer = new BasicOutputBuffer();
+                    buffer = new BasicOutputBuffer();
                     BsonWriter writer = new BsonBinaryWriter(buffer);
                     writer.pipe(reader);
                     writer.flush();
-
-                    cb.cb(buffer.toByteArray());
                 } catch (BSONException e) {
                     cb.err(BSON_ERROR_CODE, BSON_ERROR_STRING);
+                    return;
                 }
+                cb.cb(buffer.toByteArray());
             }
 
             @Override

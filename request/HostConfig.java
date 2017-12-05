@@ -40,15 +40,18 @@ class HostConfig {
 
             @Override
             public void response(byte[] data) {
+                String version;
+                byte[] hid;
                 try {
                     BsonDocument bson = new RawBsonDocument(data);
                     BsonDocument bsonDocument = bson.get("data").asDocument();
-                    String version = bsonDocument.getString("version").getValue();
-                    byte[] hid = bsonDocument.getBinary("hid").getData();
-                    cb.cb(version, hid);
+                    version = bsonDocument.getString("version").getValue();
+                    hid = bsonDocument.getBinary("hid").getData();
                 } catch (BSONException e) {
                     cb.err(BSON_ERROR_CODE, BSON_ERROR_STRING);
+                    return;
                 }
+                cb.cb(version, hid);
             }
 
             @Override

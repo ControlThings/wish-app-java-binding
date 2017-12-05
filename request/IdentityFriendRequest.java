@@ -67,13 +67,15 @@ class IdentityFriendRequest {
 
             @Override
             public void response(byte[] data) {
+                boolean state;
                 try {
                     BsonDocument bson = new RawBsonDocument(data);
-                    boolean state = bson.get("data").asBoolean().getValue();
-                    cb.cb(state);
+                    state = bson.get("data").asBoolean().getValue();
                 } catch (BSONException e) {
                     cb.err(BSON_ERROR_CODE, BSON_ERROR_STRING);
+                    return;
                 }
+                cb.cb(state);
             }
 
             @Override

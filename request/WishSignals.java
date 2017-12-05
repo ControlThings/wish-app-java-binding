@@ -42,20 +42,21 @@ class WishSignals {
 
             @Override
             public void response(byte[] data) {
+                String signalData = null;
                 try {
                     BsonDocument bson = new RawBsonDocument(data);
-                    String signalData;
                     if (bson.isString("data")) {
-                        cb.cb(bson.getString("data").getValue());
-                    } else if (bson.isArray("data")) {
+                        signalData = bson.getString("data").getValue();
+                    }
+                    if (bson.isArray("data")) {
                         BsonArray bsonArray = bson.getArray("data");
-                        cb.cb(bsonArray.get(0).asString().getValue());
-                    } else {
-                        cb.cb(null);
+                        signalData = bsonArray.get(0).asString().getValue();
                     }
                 } catch (BSONException e) {
                     cb.err(BSON_ERROR_CODE, BSON_ERROR_STRING);
+                    return;
                 }
+                cb.cb(signalData);
             }
 
             @Override

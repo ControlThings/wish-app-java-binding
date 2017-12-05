@@ -46,14 +46,16 @@ class IdentityVerify {
 
             @Override
             public void response(byte[] data) {
+                boolean value;
                 try {
                     BsonDocument bson = new RawBsonDocument(data);
                     BsonDocument bsonData = bson.getDocument("data");
-                    boolean value = bsonData.get("data").asBoolean().getValue();
-                    cb.cb(value);
+                    value = bsonData.get("data").asBoolean().getValue();
                 } catch (BSONException e) {
                     cb.err(BSON_ERROR_CODE, BSON_ERROR_STRING);
+                    return;
                 }
+                cb.cb(value);
             }
 
             @Override

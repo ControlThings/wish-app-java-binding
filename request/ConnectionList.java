@@ -43,9 +43,10 @@ class ConnectionList {
 
             @Override
             public void response(byte[] data) {
+                List<wish.Connection> connections;
                 try {
                     BsonDocument bson = new RawBsonDocument(data);
-                    List<wish.Connection> connections = new ArrayList<wish.Connection>();
+                    connections = new ArrayList<wish.Connection>();
                     BsonArray bsonArray = bson.get("data").asArray();
                     for (BsonValue bsonValue : bsonArray) {
                         wish.Connection connection = new wish.Connection();
@@ -56,10 +57,11 @@ class ConnectionList {
                         connection.setOutgoing(bsonValue.asDocument().get("outgoing").asBoolean().getValue());
                         connections.add(connection);
                     }
-                    cb.cb(connections);
                 } catch (BSONException e) {
                     cb.err(BSON_ERROR_CODE, BSON_ERROR_STRING);
+                    return;
                 }
+                cb.cb(connections);
             }
 
             @Override

@@ -46,10 +46,11 @@ class WldList {
 
             @Override
             public void response(byte[] data) {
+                List<LocalDiscovery> localDiscoveries;
                 try {
                     BsonDocument bson = new RawBsonDocument(data);
                     BsonArray bsonArray = bson.get("data").asArray();
-                    List<LocalDiscovery> localDiscoveries = new ArrayList<LocalDiscovery>();
+                    localDiscoveries = new ArrayList<LocalDiscovery>();
 
                     for (BsonValue listValue : bsonArray) {
                         LocalDiscovery localDiscovery = new LocalDiscovery();
@@ -69,10 +70,11 @@ class WldList {
 
                         localDiscoveries.add(localDiscovery);
                     }
-                    cb.cb(localDiscoveries);
                 } catch (BSONException e) {
                     cb.err(BSON_ERROR_CODE, BSON_ERROR_STRING);
+                    return;
                 }
+                cb.cb(localDiscoveries);
             }
 
             @Override

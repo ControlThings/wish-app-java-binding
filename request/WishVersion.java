@@ -39,13 +39,15 @@ class WishVersion {
 
             @Override
             public void response(byte[] data) {
+                String version;
                 try {
                     BsonDocument bson = new RawBsonDocument(data);
-                    String version = bson.get("data").asString().getValue();
-                    cb.cb(version);
+                    version = bson.get("data").asString().getValue();
                 } catch (BSONException e) {
                     cb.err(BSON_ERROR_CODE, BSON_ERROR_STRING);
+                    return;
                 }
+                cb.cb(version);
             }
 
             @Override
