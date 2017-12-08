@@ -73,7 +73,7 @@ public class WishApp {
      * @param tag the console log tag
      * @param bson_bytes the BSON object to be pretty printed
      */
-    public static native void bsonConsolePrettyPrinter(String tag, byte[] bson_bytes);
+    public native void bsonConsolePrettyPrinter(String tag, byte[] bson_bytes);
 
 
     void online(byte[] peerBson) {
