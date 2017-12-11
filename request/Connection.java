@@ -42,6 +42,10 @@ public class Connection {
        return ConnectionDisconnect.request(cid, callback);
     }
 
+    public static int checkConnections(CheckConnectionsCb callback) {
+        return ConnectionCheckConnections.request(callback);
+    }
+
     public abstract static class ListCb extends Callback {
         public abstract void cb(List<wish.Connection> connections);
     }
@@ -52,6 +56,10 @@ public class Connection {
 
     public abstract static class RequestCb extends Callback {
         public abstract void cb(byte[] bson);
+    }
+
+    public abstract static class CheckConnectionsCb extends Callback {
+        public abstract void cb(boolean response);
     }
 
 }
