@@ -57,17 +57,17 @@ public class WishApp {
         }
     }
 
-    synchronized native int startWishApp(String appName, WishFile wishFile);
-    synchronized native void stopWishApp();
+    native int startWishApp(String appName, WishFile wishFile);
+    native void stopWishApp();
 
     /**
      * Send a Wish request to the local Wish core
      * @param req the request in BSON format
      * @return the RPC id; The invalid RPC id 0 is returned for any errors.
      */
-    public synchronized native int request(byte[] req, RequestCb cb); //will call  wish_app_core_with_cb_context
+    public native int request(byte[] req, RequestCb cb); //will call  wish_app_core_with_cb_context
 
-    public synchronized native void requestCancel(int id);
+    public native void requestCancel(int id);
 
     /** This method simply pretty-prints a BSON object to the system console
      * @param tag the console log tag
