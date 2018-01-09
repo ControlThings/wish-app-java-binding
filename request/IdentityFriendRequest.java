@@ -1,5 +1,7 @@
 package wish.request;
 
+import android.util.Log;
+
 import org.bson.BSONException;
 import org.bson.BsonBinary;
 import org.bson.BsonBinaryWriter;
@@ -16,6 +18,7 @@ import wish.Cert;
 import wish.Peer;
 import wish.WishApp;
 
+import static android.content.ContentValues.TAG;
 import static wish.request.Callback.BSON_ERROR_CODE;
 import static wish.request.Callback.BSON_ERROR_STRING;
 
@@ -113,6 +116,12 @@ class IdentityFriendRequest {
                 dataWriter.writeBinaryData("hid", new BsonBinary(peer.getRhid()));
                 dataWriter.writeBinaryData("sid", new BsonBinary(peer.getRsid()));
                 dataWriter.writeBinaryData("pubkey", new RawBsonDocument(data).getBinary("pubkey"));
+
+                /* TODO: Add all the transports */
+                String transports_0 = new RawBsonDocument(data).getArray("transports").get(0).asString().getValue();
+                dataWriter.writeStartArray("transports");
+                dataWriter.writeString(transports_0);
+                dataWriter.writeEndArray();
                 dataWriter.writeEndDocument();
                 dataWriter.flush();
 
