@@ -55,7 +55,7 @@ class ConnectionList {
                         connection.setRuid(bsonValue.asDocument().get("ruid").asBinary().getData());
                         connection.setRhid(bsonValue.asDocument().get("rhid").asBinary().getData());
                         connection.setOutgoing(bsonValue.asDocument().get("outgoing").asBoolean().getValue());
-                        connections.add(connection);
+                        connection.setRelay(bsonValue.asDocument().get("relay").asBoolean().getValue());
                     }
                 } catch (BSONException e) {
                     cb.err(BSON_ERROR_CODE, BSON_ERROR_STRING);

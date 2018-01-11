@@ -14,6 +14,7 @@ public class Connection implements Serializable{
     private byte[] ruid;
     private byte[] rhid;
     private boolean outgoing;
+    private boolean relay;
 
     public int getCid() {
         return cid;
@@ -51,8 +52,16 @@ public class Connection implements Serializable{
         return outgoing;
     }
 
+    public boolean isRelayed() {
+        return relay;
+    }
+
     public void setOutgoing(boolean outgoing) {
         this.outgoing = outgoing;
+    }
+
+    public void setRelay(boolean relay) {
+        this.relay = relay;
     }
 
     public boolean equals(Object object) {
