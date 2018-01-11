@@ -141,37 +141,38 @@ class IdentityFriendRequest {
 
                     @Override
                     public void cb(List<wish.Connection> connections) {
-                        for (wish.Connection connection : connections) {
-                            if (Arrays.equals(connection.getLuid(), peer.getLuid()) && Arrays.equals(connection.getRhid(), peer.getRhid()) && Arrays.equals(connection.getRuid(), peer.getRuid())) {
-
-                                Identity.sign(connection, peer.getRuid(), new RawBsonDocument(cert), new Identity.SignCb() {
-
-                                    private Identity.FriendRequestCb callback;
-
-                                    @Override
-                                    public void cb(byte[] data) {
-                                        Cert cert = new Cert();
-                                        cert.setCert(new RawBsonDocument(data));
-                                        request(luid, contact, new RawBsonDocument(data), callback);
-                                    }
-
-                                    @Override
-                                    public void err(int code, String msg) {
-                                        callback.err(code, msg);
-                                    }
-
-                                    @Override
-                                    public void end() {
-                                    }
-
-                                    private Identity.SignCb init(Identity.FriendRequestCb callback) {
-                                        this.callback = callback;
-                                        return this;
-                                    }
-                                }.init(callback));
-
+                        wish.Connection connection = null;
+                        for (wish.Connection conn : connections) {
+                            if (Arrays.equals(conn.getLuid(), peer.getLuid()) && Arrays.equals(conn.getRhid(), peer.getRhid()) && Arrays.equals(conn.getRuid(), peer.getRuid())) {
+                                connection = conn;
+                                break;
                             }
                         }
+                        Identity.sign(connection, peer.getRuid(), new RawBsonDocument(cert), new Identity.SignCb() {
+
+                            private Identity.FriendRequestCb callback;
+
+                            @Override
+                            public void cb(byte[] data) {
+                                Cert cert = new Cert();
+                                cert.setCert(new RawBsonDocument(data));
+                                request(luid, contact, new RawBsonDocument(data), callback);
+                            }
+
+                            @Override
+                            public void err(int code, String msg) {
+                                callback.err(code, msg);
+                            }
+
+                            @Override
+                            public void end() {
+                            }
+
+                            private Identity.SignCb init(Identity.FriendRequestCb callback) {
+                                this.callback = callback;
+                                return this;
+                            }
+                        }.init(callback));
                     }
 
                     @Override
