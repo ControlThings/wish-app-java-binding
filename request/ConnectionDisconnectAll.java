@@ -1,5 +1,7 @@
 package wish.request;
 
+import android.util.Log;
+
 import org.bson.BSONException;
 import org.bson.BsonBinaryWriter;
 import org.bson.BsonDocument;
@@ -7,6 +9,7 @@ import org.bson.BsonWriter;
 import org.bson.RawBsonDocument;
 import org.bson.io.BasicOutputBuffer;
 
+import wish.LocalDiscovery;
 import wish.WishApp;
 
 import static wish.request.Callback.BSON_ERROR_CODE;
@@ -40,7 +43,13 @@ class ConnectionDisconnectAll {
             public void response(byte[] data) {
                 boolean value;
                 try {
+
                     BsonDocument bson = new RawBsonDocument(data);
+                    Log.d("disconnectAll", "bson: " + bson.toJson());
+                    if (!bson.isBoolean("data")) {
+                        cb.err(BSON_ERROR_CODE, BSON_ERROR_STRING);
+                        return;
+                    }
                     value = bson.get("data").asBoolean().getValue();
 
                 } catch (BSONException e) {
