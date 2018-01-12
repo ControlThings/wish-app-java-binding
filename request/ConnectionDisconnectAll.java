@@ -15,9 +15,9 @@ import static wish.request.Callback.BSON_ERROR_STRING;
 /**
  * Created by jeppe on 10/18/16.
  */
-class ConnectionDisconnect {
-    static int request(int cid, Connection.DisconnectCb callback) {
-        String op = "connections.disconnect";
+class ConnectionDisconnectAll {
+    static int request(Connection.DisconnectAllCb callback) {
+        String op = "connections.disconnectAll";
 
         BasicOutputBuffer buffer = new BasicOutputBuffer();
         BsonWriter writer = new BsonBinaryWriter(buffer);
@@ -26,7 +26,6 @@ class ConnectionDisconnect {
         writer.writeString("op", op);
 
         writer.writeStartArray("args");
-        writer.writeInt32(cid);
         writer.writeEndArray();
 
         writer.writeInt32("id", 0);
@@ -35,7 +34,7 @@ class ConnectionDisconnect {
         writer.flush();
 
         return WishApp.getInstance().request(buffer.toByteArray(), new WishApp.RequestCb() {
-            Connection.DisconnectCb cb;
+            Connection.DisconnectAllCb cb;
 
             @Override
             public void response(byte[] data) {
@@ -62,7 +61,7 @@ class ConnectionDisconnect {
                 cb.err(code, msg);
             }
 
-            private WishApp.RequestCb init(Connection.DisconnectCb callback) {
+            private WishApp.RequestCb init(Connection.DisconnectAllCb callback) {
                 this.cb = callback;
                 return this;
             }

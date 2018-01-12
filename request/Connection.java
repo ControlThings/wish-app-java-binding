@@ -38,7 +38,7 @@ public class Connection {
      * @param callback Connection.DisconectCb
      * @return
      */
-    public static int disconect(int cid, DisconectCb callback) {
+    public static int disconnect(int cid, DisconnectCb callback) {
        return ConnectionDisconnect.request(cid, callback);
     }
 
@@ -46,11 +46,15 @@ public class Connection {
         return ConnectionCheckConnections.request(callback);
     }
 
+    public static int disconnectAll(DisconnectAllCb callback) {
+        return ConnectionDisconnectAll.request(callback);
+    }
+
     public abstract static class ListCb extends Callback {
         public abstract void cb(List<wish.Connection> connections);
     }
 
-    public abstract static class DisconectCb extends Callback {
+    public abstract static class DisconnectCb extends Callback {
         public abstract void cb(boolean value);
     }
 
@@ -62,4 +66,7 @@ public class Connection {
         public abstract void cb(boolean response);
     }
 
+    public abstract static class DisconnectAllCb extends Callback {
+        public abstract void cb(boolean value);
+    }
 }
