@@ -28,7 +28,7 @@ public class Identity implements Serializable {
 
     private static int WISH_UID_LEN = 32;
 
-    private static class Hosts {
+    private static class Hosts implements Serializable {
         private List<String> transports;
 
         public List<String> getTransports() {
