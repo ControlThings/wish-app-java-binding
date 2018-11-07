@@ -25,10 +25,11 @@ public class Identity implements Serializable {
     private boolean privkey;
     private byte[] pubkey;
     private Hosts hosts;
+    private List<String> transports;
 
     private static int WISH_UID_LEN = 32;
 
-    private static class Hosts {
+    private static class Hosts implements Serializable {
         private List<String> transports;
 
         public List<String> getTransports() {
@@ -50,12 +51,17 @@ public class Identity implements Serializable {
         Identity identity = new Identity();
         try {
             if (bsonDocument.containsKey("uid")
-                    && bsonDocument.containsKey("alias")
-                    && bsonDocument.containsKey("privkey")) {
+                    && bsonDocument.containsKey("alias")){
 
                 identity.uid = bsonDocument.getBinary("uid").getData();
                 identity.alias = bsonDocument.getString("alias").getValue();
-                identity.privkey = bsonDocument.getBoolean("privkey").getValue();
+
+
+                if (bsonDocument.containsKey("privkey")) {
+                    identity.privkey = bsonDocument.getBoolean("privkey").getValue();
+                } else {
+                    identity.privkey = false;
+                }
 
                 if (identity.uid.length != WISH_UID_LEN) {
                     return null;
@@ -84,6 +90,15 @@ public class Identity implements Serializable {
                         }
                     }
                     identity.hosts = host;
+                }
+
+                if (bsonDocument.containsKey("transports")) {
+                    identity.transports = new ArrayList<String>();
+                    for (BsonValue bsonTransport : bsonDocument.getArray("transports")) {
+                        if (bsonTransport.isString()) {
+                            identity.transports.add(bsonTransport.asString().getValue());
+                        }
+                    }
                 }
 
             } else {
@@ -126,6 +141,16 @@ public class Identity implements Serializable {
             writer.writeEndArray();
         }
 
+        if (getTransports() != null && !getTransports().isEmpty()) {
+            writer.writeStartDocument();
+            writer.writeStartArray("transports");
+            for (String transport : getTransports()) {
+                writer.writeString(transport);
+            }
+            writer.writeEndArray();
+            writer.writeEndDocument();
+        }
+
         writer.writeEndDocument();
         writer.flush();
 
@@ -151,6 +176,10 @@ public class Identity implements Serializable {
 
     public Hosts getHosts() {
         return hosts;
+    }
+
+    public List<String> getTransports() {
+        return transports;
     }
 
     public boolean equals(Object object) {

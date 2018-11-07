@@ -96,6 +96,17 @@ public class Identity {
      *
      * @param luid Byte array of identity uid
      * @param contact BsonDocument as FriendRequest contact
+     * @param contact BsonDocument meta data
+     * @param callback
+     */
+    public static void friendRequest(byte[] luid, BsonDocument contact, BsonDocument meta,  FriendRequestCb callback) {
+        IdentityFriendRequest.request(luid, contact, meta, callback);
+    }
+
+    /**
+     *
+     * @param luid Byte array of identity uid
+     * @param contact BsonDocument as FriendRequest contact
      * @param peer wish peer
      * @param callback
      */
@@ -232,9 +243,8 @@ public class Identity {
         public abstract void cb(String name, byte[] uid);
     }
 
-    //todo change to wishApp
-    public interface FriendRequestCb extends CallbackInterface {
-        public void cb(boolean state);
+    public abstract static class FriendRequestCb extends Callback {
+        public abstract void cb(boolean state);
     }
 
     public abstract static class ListCb extends Callback {
